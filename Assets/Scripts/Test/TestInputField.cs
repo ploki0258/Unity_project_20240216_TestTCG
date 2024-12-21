@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+ï»¿using TMPro;
 using UnityEngine;
 
 public class TestInputField : MonoBehaviour
@@ -10,20 +8,20 @@ public class TestInputField : MonoBehaviour
 	[SerializeField] string solTarget;
 	[SerializeField] Color colorInput = new Color(1f, 1f, 1f, 1f);
 
-	//°e¥X«ö¶s
+	//é€å‡ºæŒ‰éˆ•
 	public void InputHandler(string input)
 	{
 		input = input_TMP.text;
 
 		if (input == "")
 		{
-			text_TMP.text = "µª®×¤£¯à¬°ªÅ¥Õ";
+			text_TMP.text = "ç­”æ¡ˆä¸èƒ½ç‚ºç©ºç™½";
 		}
 
 		if (CompareInput(input, solTarget, false))
 		{
 			text_TMP.color = colorInput;
-			text_TMP.text = "µª®×¡G" + input;
+			text_TMP.text = "ç­”æ¡ˆï¼š" + input;
 		}
 	}
 
@@ -32,28 +30,28 @@ public class TestInputField : MonoBehaviour
 		if (input == "")
 			return;
 
-		Debug.Log("¿é¤J­È¬°¡G" + input);
+		Debug.Log("è¼¸å…¥å€¼ç‚ºï¼š" + input);
 		//text_TMP.color = colorInput;
-		//string solution = text_TMP.text = "§Ú¬O" + input;
+		//string solution = text_TMP.text = "æˆ‘æ˜¯" + input;
 
 		if (CompareInput(input, solTarget))
 		{
-			Debug.Log("<color=green>µª¹ï!</color>");
+			Debug.Log("<color=green>ç­”å°!</color>");
 			text_TMP.color = Color.green;
-			text_TMP.text = "®¥³ßµª¹ï! §Ú¬O" + input;
+			text_TMP.text = "æ­å–œç­”å°! æˆ‘æ˜¯" + input;
 		}
 		else
 		{
-			Debug.Log("<color=red>µª¿ù~</color>");
+			Debug.Log("<color=red>ç­”éŒ¯~</color>");
 			text_TMP.color = Color.red;
-			text_TMP.text = "µª¿ùÅo~ ";
+			text_TMP.text = "ç­”éŒ¯å›‰~ ";
 			input_TMP.text = "";
 		}
 	}
 
 	bool CompareInput(string input, string output, bool equals = true)
 	{
-		// ¦pªG¿é¤J­È µ¥©ó ¿é¥X­È
+		// å¦‚æœè¼¸å…¥å€¼ ç­‰æ–¼ è¼¸å‡ºå€¼
 		if (equals == true)
 		{
 			if (input == output)
@@ -67,7 +65,7 @@ public class TestInputField : MonoBehaviour
 		}
 		else
 		{
-			// ¦pªG¿é¤J­È ¥]§t ¿é¥X­È
+			// å¦‚æœè¼¸å…¥å€¼ åŒ…å« è¼¸å‡ºå€¼
 			if (input.Contains(output))
 			{
 				return true;

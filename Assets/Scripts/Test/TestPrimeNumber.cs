@@ -10,7 +10,7 @@ public class TestPrimeNumber : MonoBehaviour
 	[SerializeField, Header("輸入數組")]
 	List<int> numbers;
 
-	List<int> primesList;
+	[Tooltip("質數列表")] List<int> primesList;
 
 	private void Start()
 	{
@@ -38,10 +38,10 @@ public class TestPrimeNumber : MonoBehaviour
 	}
 
 	/// <summary>
-	/// 質數
+	/// 質數判斷
 	/// </summary>
 	/// <param name="number">正整數</param>
-	/// <returns>是否為質數</returns>
+	/// <returns>是否為質數 Bool</returns>
 	bool Prime(int number)
 	{
 		int 餘 = 0;
@@ -51,7 +51,7 @@ public class TestPrimeNumber : MonoBehaviour
 
 		for (int i = 2; i < number; i++)
 		{
-			int 商 = (number / i);
+			//int 商 = (number / i);
 			餘 = (number % i);
 
 			//Debug.Log("除數：" + i);
@@ -61,12 +61,14 @@ public class TestPrimeNumber : MonoBehaviour
 			{
 				return false;
 			}
-			//Debug.Log("平方根：" + Mathf.Sqrt(number));
 		}
-
 		return 餘 != 0;
 	}
 
+	/// <summary>
+	/// 多個質數判斷
+	/// </summary>
+	/// <param name="numbers">整數列表</param>
 	void Primes(List<int> numbers)
 	{
 		if (isArrayData == false)
@@ -120,18 +122,26 @@ public class TestPrimeNumber : MonoBehaviour
 		}
 	}
 
-	[ContextMenu("產生費波那契列表")]     //	後項 = 前兩項相加
+	//	後項 = 前兩項相加
+	/// <summary>
+	/// 費波那契數列
+	/// </summary>
+	[ContextMenu("產生費波那契列表")]
 	void NumbersNeed_rite()
 	{
-		int front_1 = 0;
+		int front_1 = 1;
 		int front_2 = 1;
 
-		numbers[0] = front_1;
-		numbers[1] = front_2;
+		//numbers[0] = front_1;
+		//numbers[1] = front_2;
 
-		for (int i = 2; i < numbers.Count; i++)
+		for (int i = 0; i < numbers.Count; i++)
 		{
-			if (i >= 2)
+			if (i < 2)
+			{
+				numbers[i] = 1;
+			}
+			else if (i >= 2)
 			{
 				front_1 = numbers[i - 1];       // 前一項
 				front_2 = numbers[i - 2];       // 前二項
@@ -142,17 +152,55 @@ public class TestPrimeNumber : MonoBehaviour
 	}
 
 	[SerializeField] SequenceType 數列類型 = SequenceType.等差;
-	[SerializeField] int 初始值 = 0;
-	[SerializeField] int 差值 = 1;
-	[SerializeField] int 比值 = 2;
-	[ContextMenu("產生自定義列表")]     //	後項 = 前兩項相加
+	[SerializeField] int 首項 = 0;
+	[SerializeField, Tooltip("兩數相差之值")] int 公差 = 1; // 公差 d
+	[SerializeField, Tooltip("兩數相除之值")] int 公比 = 2; // 公比 r
+
+	/// <summary>
+	/// 自定義數列：
+	/// 1.等差數列
+	/// 2.等比數列
+	/// </summary>
+	[ContextMenu("產生自定義列表")]
 	void NumbersNeed_customized()
 	{
-		int a = 初始值;
+		int a = 首項;
 
 		for (int i = 0; i < numbers.Count; i++)
 		{
-			if (數列類型 == SequenceType.等差)
+			#region switch 寫法
+			switch (數列類型)
+			{
+				case SequenceType.等差:
+					// 第1項
+					if (i == 0)
+					{
+						// 將初始值設定為列表中的第一項
+						numbers[i] = 首項;
+					}
+					else
+					{
+						// 之後的項次為前項加上差值
+						numbers[i] = a + 公差;
+						a = numbers[i];
+					}
+					break;
+				case SequenceType.等比:
+					if (i == 0)
+					{
+						numbers[i] = 首項;
+					}
+					else
+					{
+						numbers[i] = a * 公比;
+						a = numbers[i];
+					}
+					break;
+			}
+			#endregion
+
+			#region if 寫法
+			/*if (數列類型 == SequenceType.等差)
 			{
 				if (i == 0)
 				{
@@ -175,12 +223,17 @@ public class TestPrimeNumber : MonoBehaviour
 					numbers[i] = a * 比值;
 					a = numbers[i];
 				}
-			}
+			}*/
+			#endregion
 		}
 	}
 
+	/// <summary>
+	/// 數列類型
+	/// </summary>
 	public enum SequenceType
 	{
-		等差, 等比
+		等差,
+		等比,
 	}
 }

@@ -1518,10 +1518,6 @@ MonoBehaviour:
     cardIcon: {fileID: 0}
     cardBG: {fileID: 0}
     cardDescription: 
-    cardFeature:
-    - "\u4EBA\u65CF"
-    - "\u4E9E\u4EBA"
-    - "\u9B54\u65CF"
   nameText: {fileID: 0}
   costText: {fileID: 0}
   atkText: {fileID: 0}
@@ -2053,13 +2049,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4ea9d1a5775ab14e9c73e571ea69ac7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isArray: 1
+  isArrayData: 1
   number: 0
-  numbers: 000000000100000001000000020000000300000005000000080000000d0000001500000022000000
-  "\u6578\u5217\u985E\u578B": 0
-  "\u521D\u59CB\u503C": 1
-  "\u5DEE\u503C": 2
-  "\u6BD4\u503C": 17
+  numbers: 0100000001000000020000000300000005000000080000000d000000150000002200000037000000
+  "\u6578\u5217\u985E\u578B": 1
+  "\u9996\u9805": 1
+  "\u516C\u5DEE": 1
+  "\u516C\u6BD4": 2
 --- !u!4 &688996536
 Transform:
   m_ObjectHideFlags: 0
