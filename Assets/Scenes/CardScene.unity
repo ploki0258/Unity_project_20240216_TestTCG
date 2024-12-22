@@ -423,6 +423,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 64755815}
   m_CullTransparentMesh: 1
+--- !u!1 &135470964
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 135470966}
+  - component: {fileID: 135470965}
+  m_Layer: 0
+  m_Name: "\u5BC6\u78BC\u7522\u751F\u5668"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &135470965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 135470964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f50d4c871a35844ebc9bf3b75f80d5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isIncludeUppercase: 0
+  passwordLength: 8
+--- !u!4 &135470966
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 135470964}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &141726794
 GameObject:
   m_ObjectHideFlags: 0
@@ -1912,7 +1958,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &576592400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2036,7 +2082,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &688996535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2051,7 +2097,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isArrayData: 1
   number: 0
-  numbers: 0100000001000000020000000300000005000000080000000d000000150000002200000037000000
+  numbers: 01000000030000000500000007000000090000000b0000000d0000000f0000001100000013000000
   "\u6578\u5217\u985E\u578B": 1
   "\u9996\u9805": 1
   "\u516C\u5DEE": 1

@@ -14,35 +14,32 @@ public class TestPrimeNumber : MonoBehaviour
 
 	private void Start()
 	{
-		//numbers = new List<int>();
 		primesList = new List<int>();
 
 		耞借计();
-
-		Primes(numbers);
 	}
 
 	void 耞借计()
 	{
 		if (isArrayData == false)
 		{
-			if (Prime(number))
-			{
+			if (IsPrime(number))
 				Debug.Log($"<color=#ff9870>{number}琌借计</color>");
-			}
 			else
-			{
 				Debug.Log($"<color=#FF7ABF>{number}ぃ琌借计</color>");
-			}
+		}
+		else
+		{
+			Primes(numbers);
 		}
 	}
 
 	/// <summary>
-	/// 借计耞
+	/// 耞琌借计
 	/// </summary>
 	/// <param name="number">タ俱计</param>
 	/// <returns>琌借计 Bool</returns>
-	bool Prime(int number)
+	bool IsPrime(int number)
 	{
 		int 緇 = 0;
 
@@ -62,6 +59,8 @@ public class TestPrimeNumber : MonoBehaviour
 				return false;
 			}
 		}
+
+		if (number == 2) return true;
 		return 緇 != 0;
 	}
 
@@ -76,7 +75,7 @@ public class TestPrimeNumber : MonoBehaviour
 
 		foreach (int num in numbers)
 		{
-			if (Prime(num))
+			if (IsPrime(num))
 			{
 				Debug.Log($"<color=#ff9870>{num}琌借计</color>");
 				primesList.Add(num);
