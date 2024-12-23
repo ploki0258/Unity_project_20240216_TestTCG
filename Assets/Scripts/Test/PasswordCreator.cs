@@ -1,5 +1,6 @@
-//using System;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 public class PasswordCreator : MonoBehaviour
 {
@@ -14,29 +15,44 @@ public class PasswordCreator : MonoBehaviour
 
 	private void Start()
 	{
-		print($"盞絏{RandomPassword(passwordLength, isIncludeUppercase)}");
+		string password = RandomPassword(passwordLength, isIncludeUppercase, false);
+		//print($"盞絏{password}\n{password.Length}");
 	}
 
-	string RandomPassword(int length, bool includeUpper = false, bool includeNumbers = true)
+	string pw_random;
+	int id;
+	string RandomPassword(int length, bool includeUpper = false, bool isRepeat = true)
 	{
 		// ㄌ沮琌糶 ㄓ穝糤盞絏ノ才
 		string pw = includeUpper ? numbers + lowercase + uppercase : numbers + lowercase;
-		//print($"盞絏{pw}");
-		// 狦计
-		if (includeNumbers)
+		print($"盞絏{pw}\n{pw.Length}");
+
+		int n = pw.IndexOf('a');
+		// 竊魁计场だ
+		string pw_num = pw.Substring(0, n);
+		//print(pw_num);
+
+		// 穝ゴ睹盞絏pw抖
+		
+		for (int i = 0; i < pw.Length; i++)
 		{
-			int n = pw.IndexOf('a');
-			string pw_num = pw.Substring(0, n);
-			//print(pw_num);
-			// ゴ睹抖
-			for (int i = 0; i < length; i++)
-			{
-				// 计场
-				int id_1 = Random.Range(0, pw_num.Length);
-				int id_2 = Random.Range(0, pw.Length);
-				password += pw[id_2];
-			}
+			id = Random.Range(0, pw.Length);
+			pw_random += pw[id];
+
+			if (isRepeat == false)
+				pw.ToList().RemoveAt(id);
 		}
+
+		password = pw_random;
+
+		// ゴ睹抖
+		/*for (int i = 0; i < length; i++)
+		{
+			// 计场
+			int id_1 = Random.Range(0, pw_num.Length);
+			int id_2 = Random.Range(0, pw.Length);
+			password += pw[id_2];
+		}*/
 
 		return password;
 	}
