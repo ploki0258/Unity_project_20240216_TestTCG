@@ -1,21 +1,90 @@
 ﻿using UnityEngine;
+using System;
 
-[System.Serializable]
+/// <summary>
+/// 卡牌 (父類)
+/// </summary>
+[Serializable]
 public class Card
 {
+	#region 欄位
+	// 共通欄位
+	[Header("卡片編號")] public int id;
 	[Header("卡片名稱")] public string cardName;
 	[Header("卡片類型")] public CardType cardType;
 	[Header("卡片稀有度")] public CardRare cardRare;
-	[Header("可否被攻擊")] public bool canHurt;
+	//[Header("可否被攻擊")] public bool canHurt;
 	[Header("卡片費用")] public int cardCost;
-	[Header("攻擊力")] public int attack;
-	[Header("生命值")] public int health;
 	[Header("卡片圖示")] public Sprite cardIcon;
 	[Header("卡圖背景")] public Sprite cardBG;
-	[Header("卡片描述")][TextArea(5, 7)] public string cardDescription;
-	[Header("卡片特性")][TextArea(1, 3)] internal string[] cardFeature;
+	[Header("卡片描述")][TextArea(3, 7)] public string cardDescription;
+	#endregion
+
+	/// <summary>
+	/// 卡牌父類的建構子
+	/// </summary>
+	/// <param name="_id">卡牌編號</param>
+	/// <param name="_name">卡牌名稱</param>
+	/// <param name="_cost">卡牌費用</param>
+	/// <param name="_rare">卡牌稀有度</param>
+	/// <param name="_des">卡牌說明</param>
+	public Card(int _id, string _name, int _cost, CardRare _rare, string _des)
+	{
+		this.id = _id;
+		this.cardName = _name;
+		this.cardCost = _cost;
+		this.cardRare = _rare;
+		this.cardDescription = _des;
+	}
 }
-// TODO
+
+/// <summary>
+/// 生物卡 (子類)
+/// </summary>
+[Serializable]
+public class BiologyCard : Card
+{
+	#region 欄位
+	[Header("攻擊力")] public int attack;
+	[Header("生命值")] public int health;
+	[Tooltip("當前生命值")] private int currHealth;
+	[Header("卡片屬性")] public string[] cardFeature;
+	#endregion
+
+	public BiologyCard(int _id, string _name, int _cost, CardRare _rare, string _des, int _atk, int _hea, string[] _feature) : base(_id, _name, _cost, _rare, _des)
+	{
+		this.cardType = CardType.Biology;
+		this.attack = _atk;
+		this.health = _hea;
+		this.currHealth = this.health;
+		this.cardFeature = _feature;
+	}
+}
+
+/// <summary>
+/// 法術卡 (子類)
+/// </summary>
+[Serializable]
+public class SpellCard : Card
+{
+	public SpellCard(int _id, string _name, int _cost, CardRare _rare, string _des) : base(_id, _name, _cost, _rare, _des)
+	{
+		this.cardType = CardType.Spell;
+	}
+}
+
+/// <summary>
+/// 裝備卡 (子類)
+/// </summary>
+[Serializable]
+public class EquipmentCard : Card
+{
+	public EquipmentCard(int _id, string _name, int _cost, CardRare _rare, string _des) : base(_id, _name, _cost, _rare, _des)
+	{
+		this.cardType = CardType.Equipment;
+	}
+}
+
 /// <summary>
 /// 卡牌種類
 /// </summary>
@@ -28,7 +97,7 @@ public enum CardType
 	/// <summary>
 	/// 法術
 	/// </summary>
-	Sell,
+	Spell,
 	/// <summary>
 	/// 裝備
 	/// </summary>
