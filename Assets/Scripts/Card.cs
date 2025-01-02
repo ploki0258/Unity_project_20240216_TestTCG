@@ -5,7 +5,7 @@ using System;
 /// 卡牌 (父類)
 /// </summary>
 [Serializable]
-public class Card
+public abstract class Card
 {
 	#region 欄位
 	// 共通欄位
