@@ -3,15 +3,15 @@ using UnityEngine.UI;
 
 public class CardDisplay : MonoBehaviour
 {
-	[Header("¥dµP")] public Card[] cards;
-	[Header("¥Íª«¥d")] public BiologyCard[] biologyCards;
-	[Header("ªk³N¥d")] public SpellCard[] spellCards;
-	[Header("¸Ë³Æ¥d")] public EquipmentCard[] equipmentCards;
-	[Header("¥d¦W")] public Text nameText;
-	[Header("¶O¥Î")] public Text costText;
-	[Header("§ğÀ»¤O")] public Text atkText;
-	[Header("¦å¶q")] public Text hpText;
-	[Header("®ÄªG¤å")] public Text descriptionText;
-	[Header("¹Ï¥Ü")] public Image iconImage;
-	[Header("¥d­I")] public Image bgImage;
+	[Header("å¡ç‰Œ")] public Card[] cards;
+	[Header("ç”Ÿç‰©å¡")] public BiologyCard[] biologyCards;
+	[Header("æ³•è¡“å¡")] public SpellCard[] spellCards;
+	[Header("è£å‚™å¡")] public EquipmentCard[] equipmentCards;
+	[Header("å¡å")] public Text nameText;
+	[Header("è²»ç”¨")] public Text costText;
+	[Header("æ”»æ“ŠåŠ›")] public Text atkText;
+	[Header("è¡€é‡")] public Text hpText;
+	[Header("æ•ˆæœæ–‡")] public Text descriptionText;
+	[Header("åœ–ç¤º")] public Image iconImage;
+	[Header("å¡èƒŒ")] public Image bgImage;
 }

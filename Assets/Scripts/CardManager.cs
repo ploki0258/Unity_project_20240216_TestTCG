@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class CardManager : MonoBehaviour
 {
-	[Header("¥dµP¹w»sª«")][SerializeField] GameObject cardPrefab = null;
-	[Header("¥dµP³Ì¤j¼Æ¶q")][SerializeField] int maxCardCount;
-	[Header("¥dµP°_©l¦ì¸m")][SerializeField] Vector3 firstPos;
+	[Header("å¡ç‰Œé è£½ç‰©")][SerializeField] GameObject cardPrefab = null;
+	[Header("å¡ç‰Œæœ€å¤§æ•¸é‡")][SerializeField] int maxCardCount;
+	[Header("å¡ç‰Œèµ·å§‹ä½ç½®")][SerializeField] Vector3 firstPos;
 }
 
 /// <summary>
-/// ¥dµP®ÄªG
+/// å¡ç‰Œæ•ˆæœ
 /// </summary>
 public interface ICardEffect
 {
