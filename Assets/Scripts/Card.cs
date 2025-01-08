@@ -36,6 +36,25 @@ public abstract class Card
 		this.cardRare = _rare;
 		this.cardDescription = _des;
 	}
+
+	/// <summary>
+	/// 取得卡牌編號
+	/// </summary>
+	/// <param name="card">Card類</param>
+	/// <returns>int：卡牌編號</returns>
+	public int GetCardID(Card card) => card.id;
+	/// <summary>
+	/// 取得卡牌名稱
+	/// </summary>
+	/// <param name="card">Card類</param>
+	/// <returns>String：卡牌名稱</returns>
+	public String GetCardName(Card card) => card.cardName;
+	/// <summary>
+	/// 取得卡牌類型
+	/// </summary>
+	/// <param name="card">Card類</param>
+	/// <returns>CardType：卡牌類型</returns>
+	public CardType GetCardType(Card card) => card.cardType;
 }
 
 /// <summary>

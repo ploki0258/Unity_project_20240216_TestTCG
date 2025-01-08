@@ -1553,15 +1553,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a313aa649ae40dd4e84197d31eb774d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cards:
-  - id: 0
-    cardName: "\u53F2\u840A\u59C6"
-    cardType: 0
-    cardRare: 0
-    cardCost: 1
-    cardIcon: {fileID: 0}
-    cardBG: {fileID: 0}
-    cardDescription: 
   biologyCards:
   - id: 0
     cardName: 
