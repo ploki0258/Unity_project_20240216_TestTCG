@@ -1,21 +1,21 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Card", menuName = "Jack/Add New Card")]
 public class CardData : ScriptableObject
 {
-	// ¥dµP°ò¥»
-	[Tooltip("¥²¶ñ¡A¥B¤£¯à­«½Æ")]
-	[Header("¥d¤ù½s¸¹")] public int id;
-	[Header("¥d¤ù¦WºÙ")] public string cardName;
-	[Header("¥d¤ùÃş«¬")] public CardType cardType;
-	[Header("¥d¤ùµ}¦³«×")] public CardRare cardRare;
-	[Header("¥d¤ù¶O¥Î")] public int cardCost;
-	[Header("¥d¤ù¹Ï¥Ü")] public Sprite cardIcon;
-	[Header("¥d¹Ï­I´º")] public Sprite cardBG;
-	[Header("¥d¤ù´y­z")][TextArea(3, 5)] public string cardDescription;
-	// ¥Íª«¥d±MÄİ
-	[Tooltip("¥Íª«¥d¥Î")]
-	[Header("§ğÀ»¤O")] public int attack;
-	[Header("¥Í©R­È")] public int health;
-	[Header("¥d¤ùÄİ©Ê")] public string[] cardFeature;
+	// å¡ç‰ŒåŸºæœ¬
+	[Tooltip("å¿…å¡«ï¼Œä¸”ä¸èƒ½é‡è¤‡")]
+	[Header("å¡ç‰‡ç·¨è™Ÿ")] public int id;
+	[Header("å¡ç‰‡åç¨±")] public string cardName;
+	[Header("å¡ç‰‡é¡å‹")] public CardType cardType;
+	[Header("å¡ç‰‡ç¨€æœ‰åº¦")] public CardRare cardRare;
+	[Header("å¡ç‰‡è²»ç”¨"), Range(0, 10)] public int cardCost;
+	[Header("å¡ç‰‡åœ–ç¤º")] public Sprite cardIcon;
+	[Header("å¡åœ–èƒŒæ™¯")] public Sprite cardBG;
+	[Header("å¡åœ–é¡è‰²")] public Color cardColor;
+	[Header("å¡ç‰‡æè¿°")][TextArea(3, 5)] public string cardDescription;
+	// ç”Ÿç‰©å¡å°ˆå±¬
+	[Tooltip("ç”Ÿç‰©å¡ç”¨")][Header("æ”»æ“ŠåŠ›")] public int attack;
+	[Tooltip("ç”Ÿç‰©å¡ç”¨")][Header("ç”Ÿå‘½å€¼")] public int health;
+	[Tooltip("ç”Ÿç‰©å¡ç”¨")][Header("å¡ç‰‡å±¬æ€§")] public string[] cardFeature;
 }

@@ -17,7 +17,7 @@ public abstract class Card
 	[Header("卡片費用")] public int cardCost;
 	[Header("卡片圖示")] public Sprite cardIcon;
 	[Header("卡圖背景")] public Sprite cardBG;
-	[Header("卡片描述")][TextArea(3, 7)] public string cardDescription;
+	[Header("卡片描述")][TextArea(3, 5)] public string cardDescription;
 	#endregion
 
 	/// <summary>
@@ -65,11 +65,24 @@ public class BiologyCard : Card
 {
 	#region 欄位
 	[Header("攻擊力")] public int attack;
-	[Header("生命值")] public int health;
-	[Tooltip("當前生命值")] private int currHealth;
+	[Header("生命值"), Tooltip("最大血量")] public int health;
+	[Tooltip("當前生命值")] private int currHealth
+	{
+		get { return _currHealth; }
+		set
+		{
+			// 確保當前生命值不會超過最大生命值
+			if (value < 0)
+				_currHealth = 0;
+			else
+				_currHealth = value;
+		}
+	}
+	int _currHealth;
 	[Header("卡片屬性")] public string[] cardFeature;
 	#endregion
 
+	// 建構子
 	public BiologyCard(int _id, string _name, int _cost, CardRare _rare, string _des, int _atk, int _hea, string[] _feature) : base(_id, _name, _cost, _rare, _des)
 	{
 		this.cardType = CardType.Biology;
@@ -86,6 +99,7 @@ public class BiologyCard : Card
 [Serializable]
 public class SpellCard : Card
 {
+	// 建構子
 	public SpellCard(int _id, string _name, int _cost, CardRare _rare, string _des) : base(_id, _name, _cost, _rare, _des)
 	{
 		this.cardType = CardType.Spell;
@@ -98,6 +112,7 @@ public class SpellCard : Card
 [Serializable]
 public class EquipmentCard : Card
 {
+	// 建構子
 	public EquipmentCard(int _id, string _name, int _cost, CardRare _rare, string _des) : base(_id, _name, _cost, _rare, _des)
 	{
 		this.cardType = CardType.Equipment;
