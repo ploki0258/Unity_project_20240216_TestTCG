@@ -1,13 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.XR;
 
 /// <summary>
 /// 回合管理器
 /// </summary>
 public class BattleManager : MonoBehaviour
 {
+	#region 單例模式
+	public static BattleManager instance;
+	#endregion
+
+	#region 欄位
 	[SerializeField, Header("玩家手牌區")] Transform playerHand = null; // 玩家手牌位置
 	[SerializeField, Header("對手手牌區")] Transform enemyHand = null; // 敌人手牌位置
 	[SerializeField, Header("玩家區域")] GameObject[] playerAreas = null; // 玩家區域
@@ -16,25 +21,20 @@ public class BattleManager : MonoBehaviour
 	[SerializeField, Header("起始手牌張數"), Range(0, 7)] int startHandCount = 5; // 起始手牌數量
 	[SerializeField, Header("是否啟用手牌上限")] bool isHandMax = true; // 是否啟用手牌上限
 	[SerializeField, Header("手牌上限"), Range(0, 10)] int maxHandCount = 9; // 手牌上限
+	[SerializeField, Header("能量上限"), Range(0, 20)] int maxEnergy = 10;  // 最大能量
 
-	public PhaseType currentPhase = PhaseType.none; // 當前階段
 	public List<Card> playerDeckList = new List<Card>(); // 玩家牌組列表
 	public List<Card> enemyDeckList = new List<Card>(); // 敵人牌組列表
+	public List<Card> shuffletDeck = new List<Card>();
+	#endregion
 
-	// 能量
-	int energy
-	{
-		get => _energy; // 獲取當前能量
-		set
-		{
-			_energy = Mathf.Clamp(value, 0, maxEnergy); // 限制能量在0到最大能量之間
-		}
-	}
-	int _energy = 0;
-	// 最大能量
-	int maxEnergy = 10;
 	SimpleDeckShufflet simpleDeck = new SimpleDeckShufflet(); // 使用簡單的隨機洗牌算法
 	FisherYatesDeckShufflet yatesDeckShufflet = new FisherYatesDeckShufflet(); // 使用Fisher-Yates洗牌算法
+
+	private void Awake()
+	{
+		instance = this;
+	}
 
 	private void Start()
 	{
@@ -70,16 +70,22 @@ public class BattleManager : MonoBehaviour
 	/// </summary>
 	void SetEnergyFull()
 	{
-		energy = maxEnergy; // 設置能量為最大值
+		energy = maxInitEnergy; // 設置能量為現有最大值
+		Debug.Log($"能量：{energy}");
 	}
 
 	/// <summary>
-	/// 增加能量
+	/// 增加能量最大值
 	/// </summary>
-	/// <param name="value"></param>
-	void IncreaseEnergy(int value)
+	/// <param name="value">增加的能量</param>
+	/// <param name="energyUpperLimit">能量上限</param>
+	void IncreaseEnergyMax(int value, int energyUpperLimit)
 	{
-		energy += value; // 增加能量
+		// 如果能量最大值已達上限 則不增加
+		if (maxInitEnergy >= energyUpperLimit)
+			return;
+		maxInitEnergy += value; // 增加能量最大值
+		Debug.Log($"能量上限：{maxInitEnergy}");
 	}
 
 	/// <summary>
@@ -163,7 +169,7 @@ public class BattleManager : MonoBehaviour
 				break;
 		}
 		// 洗牌邏輯
-		shuffletDeck = shuffletDeck.OrderBy(random => Random.Range(0, 999)).ToList();
+		shuffletDeck = shuffletDeck.OrderBy(random => UnityEngine.Random.Range(0, 999)).ToList();
 	}
 
 	/// <summary>
@@ -173,19 +179,19 @@ public class BattleManager : MonoBehaviour
 	/// <param name="shufflet">洗牌方式</param>
 	void ShuffletDeck(PlayerType playerType, IDeckShufflet shufflet)
 	{
-		List<Card> shuffletDeck = new List<Card>();
+		shuffletDeck = new List<Card>();
+		// 使用接口方法進行洗牌
 		switch (playerType)
 		{
 			case PlayerType.player:
-				shuffletDeck = playerDeckList;
+				//shuffletDeck = playerDeckList;
+				playerDeckList = shufflet.ShuffletDeck(playerDeckList);
 				break;
 			case PlayerType.enemy:
-				shuffletDeck = enemyDeckList;
+				//shuffletDeck = enemyDeckList;
+				enemyDeckList = shufflet.ShuffletDeck(enemyDeckList);
 				break;
 		}
-		// 使用接口方法進行洗牌
-		shufflet.ShuffletDeck(shuffletDeck);
-
 	}
 
 	/// <summary>
@@ -217,8 +223,7 @@ public class BattleManager : MonoBehaviour
 			GameObject card = Instantiate(cardPrefab, hand); // 實例化卡牌
 			card.GetComponent<CardDisplay>().card = drawDeck[0]; // 抽取第一張卡牌
 			drawDeck.RemoveAt(0); // 從牌組中移除
-
-			// 盡可能抽取剩餘的卡牌
+								  // 盡可能抽取剩餘的卡牌
 			if (drawDeck.Count == 0)
 				break; // 如果沒有卡牌可抽，則退出循環
 		}
@@ -228,7 +233,7 @@ public class BattleManager : MonoBehaviour
 	{
 		if (currentPhase == PhaseType.playerDraw)
 		{
-			DrawCard(PlayerType.player, 1); // 玩家抽一張卡牌
+			DrawPhase();
 			currentPhase = PhaseType.playerMain; // 進入玩家主階段
 		}
 	}
@@ -237,7 +242,7 @@ public class BattleManager : MonoBehaviour
 	{
 		if (currentPhase == PhaseType.enemyDraw)
 		{
-			DrawCard(PlayerType.enemy, 1); // 對手抽一張卡牌
+			DrawPhase();
 			currentPhase = PhaseType.enemyMain; // 進入對手主階段
 		}
 	}
@@ -245,52 +250,91 @@ public class BattleManager : MonoBehaviour
 	public void OnClickTurnEnd()
 	{
 		TurnEnd();
-		TurnChange();
+		//TurnChange();
 	}
 
 	void TurnEnd()
 	{
 		if (currentPhase == PhaseType.playerMain)
 		{
-			currentPhase = PhaseType.playerEnd; // 玩家進入結束階段，進入對手抽牌階段
+			currentPhase = PhaseType.playerEnd; // 玩家結束主要階段，進入玩家結束階段
 		}
 		else if (currentPhase == PhaseType.enemyMain)
 		{
-			currentPhase = PhaseType.enemyEnd; // 對手進入結束階段，進入玩家抽牌階段
+			currentPhase = PhaseType.enemyEnd; // 對手結束主要階段，進入對手結束階段
 		}
 	}
 
+	// 待處理 回合交換
 	void TurnChange()
 	{
 		if (currentPhase == PhaseType.playerEnd)
 		{
 			currentPhase = PhaseType.enemyDraw; // 玩家進入結束階段，進入對手抽牌階段
-			TurnDraw();
 		}
 		else if (currentPhase == PhaseType.enemyEnd)
 		{
 			currentPhase = PhaseType.playerDraw; // 對手進入結束階段，進入玩家抽牌階段
-			TurnDraw();
 		}
 	}
 
-	void TurnDraw()
+	void DrawPhase()
 	{
 		// 在抽牌階段時 進行抽牌的處理
 		if (currentPhase == PhaseType.playerDraw)
 		{
-			OnPlayerDraw(); // 玩家抽牌
-							// 在抽牌之後 進行能量的處理
-			IncreaseEnergy(1);  // 初始能量增加1
+			DrawCard(PlayerType.player, 1); // 玩家抽一張卡牌
+											// 在抽牌之後 進行能量的處理
+			IncreaseEnergyMax(1, maxEnergy);  // 初始能量增加1
 			SetEnergyFull();    // 能量恢復到最大值
 		}
 		else if (currentPhase == PhaseType.enemyDraw)
 		{
-			OnEnemyDraw(); // 對手抽牌
+			DrawCard(PlayerType.enemy, 1); // 對手抽一張卡牌
 		}
 	}
 
 	// 結束階段時 進行手牌上限的檢查 部份效果的處理與結算etc.
+
+	// 當前階段
+	#region 階段
+	public PhaseType currentPhase
+	{
+		get => _currentPhase;
+		set
+		{
+			_currentPhase = value;
+			onPhaseChange?.Invoke(); // 觸發階段變化事件
+		}
+	}
+	PhaseType _currentPhase = PhaseType.none;
+	public Action onPhaseChange; // 階段變化事件
+	#endregion
+
+	// 能量
+	#region 能量
+	public int energy
+	{
+		get => _energy; // 獲取當前能量
+		set
+		{
+			_energy = Mathf.Clamp(value, 0, maxEnergy); // 限制能量在0到最大能量之間
+			onEnergyChange?.Invoke(); // 觸發能量變化事件
+		}
+	}
+	int _energy = 0;
+	public int maxInitEnergy
+	{
+		get => _maxInitEnergy;
+		set
+		{
+			_maxInitEnergy = Mathf.Clamp(value, 0, maxEnergy); // 限制最大能量初始值在0到最大能量之間
+			onEnergyChange?.Invoke(); // 觸發能量變化事件
+		}
+	}
+	int _maxInitEnergy = 0; // 最大能量初始值
+	public Action onEnergyChange; // 能量變化事件
+	#endregion
 }
 
 /// <summary>
@@ -326,7 +370,7 @@ public interface IDeckShufflet
 	/// <summary>
 	/// 洗牌
 	/// </summary>
-	public void ShuffletDeck(List<Card> shuffletDeck);
+	public List<Card> ShuffletDeck(List<Card> deck);
 }
 
 public interface IHandScheduling
@@ -342,10 +386,17 @@ public interface IHandScheduling
 
 public class SimpleDeckShufflet : IDeckShufflet
 {
+	List<Card> shuffletDeck = new List<Card>();
+
 	/// <summary>
 	/// 使用簡單的隨機洗牌算法
 	/// </summary>
-	public void ShuffletDeck(List<Card> shuffletDeck) => shuffletDeck = shuffletDeck.OrderBy(random => Random.Range(0, 999)).ToList();
+	public List<Card> ShuffletDeck(List<Card> shuffletDeck)
+	{
+		this.shuffletDeck = shuffletDeck.OrderBy(random => UnityEngine.Random.Range(0, 999)).ToList();
+		Debug.Log($"使用簡單的隨機洗牌算法，洗牌後的卡牌數量：{this.shuffletDeck.Count}\n{this.shuffletDeck[0].cardName} {this.shuffletDeck[1].cardName} {this.shuffletDeck[2].cardName}");
+		return this.shuffletDeck;
+	}
 }
 
 public class FisherYatesDeckShufflet : IDeckShufflet
@@ -353,16 +404,17 @@ public class FisherYatesDeckShufflet : IDeckShufflet
 	/// <summary>
 	/// 使用Fisher-Yates洗牌算法
 	/// </summary>
-	public void ShuffletDeck(List<Card> shuffletDeck)
+	public List<Card> ShuffletDeck(List<Card> shuffletDeck)
 	{
 		for (int i = 0; i < shuffletDeck.Count; i++)
 		{
-			int randomIndex = Random.Range(i, shuffletDeck.Count);
+			int randomIndex = UnityEngine.Random.Range(i, shuffletDeck.Count);
 			Card temp = shuffletDeck[i]; // 暫存
 			shuffletDeck[i] = shuffletDeck[randomIndex];
 			shuffletDeck[randomIndex] = temp;
 		}
-		Debug.Log($"使用Fisher-Yates洗牌算法，洗牌後的卡牌數量：{shuffletDeck.Count}");
+		Debug.Log($"使用Fisher-Yates洗牌算法，洗牌後的卡牌數量：{shuffletDeck.Count}\n{shuffletDeck[0].cardName} {shuffletDeck[1].cardName} {shuffletDeck[2].cardName}");
+		return shuffletDeck;
 	}
 }
 

@@ -622,7 +622,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -415}
-  m_SizeDelta: {x: 1406.7, y: 200}
+  m_SizeDelta: {x: 1050, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &218414179
 MonoBehaviour:
@@ -659,6 +659,7 @@ GameObject:
   - component: {fileID: 222735333}
   - component: {fileID: 222735335}
   - component: {fileID: 222735334}
+  - component: {fileID: 222735336}
   m_Layer: 5
   m_Name: Phase
   m_TagString: Untagged
@@ -725,6 +726,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 222735332}
   m_CullTransparentMesh: 1
+--- !u!114 &222735336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222735332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 752110f0f49bda747bdc6f7c69d32eb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  phaseText: {fileID: 936705487}
+  phaseImg: {fileID: 222735334}
+  playerPhaseColor: {r: 1, g: 1, b: 1, a: 1}
+  enemyPhaseColor: {r: 1, g: 0.2783019, b: 0.2783019, a: 1}
 --- !u!1 &273698989
 GameObject:
   m_ObjectHideFlags: 0
@@ -1415,7 +1432,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 415}
-  m_SizeDelta: {x: 870, y: 200}
+  m_SizeDelta: {x: 1050, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &555556153
 MonoBehaviour:
@@ -2155,11 +2172,11 @@ RectTransform:
   - {fileID: 629874835}
   - {fileID: 218414178}
   - {fileID: 555556152}
-  - {fileID: 222735333}
   - {fileID: 1949330668}
   - {fileID: 2084838623}
   - {fileID: 617728276}
   - {fileID: 950878718}
+  - {fileID: 222735333}
   - {fileID: 1020956337}
   - {fileID: 2110521405}
   m_Father: {fileID: 0}
@@ -2293,12 +2310,12 @@ MonoBehaviour:
   - {fileID: 2097941706}
   - {fileID: 136234246}
   - {fileID: 565767890}
-  cardPrefab: {fileID: 28243578478066912, guid: 6a2a5b0c1a5c20b40965993a20ead532,
+  cardPrefab: {fileID: 5059166999305593781, guid: 904840758595ad2409898afb8c1cb49b,
     type: 3}
   startHandCount: 5
   isHandMax: 1
   maxHandCount: 9
-  currentPhase: 1
+  maxEnergy: 10
 --- !u!4 &944394756
 Transform:
   m_ObjectHideFlags: 0
@@ -3477,6 +3494,7 @@ GameObject:
   - component: {fileID: 1598590786}
   - component: {fileID: 1598590788}
   - component: {fileID: 1598590787}
+  - component: {fileID: 1598590789}
   m_Layer: 5
   m_Name: EnergyText
   m_TagString: Untagged
@@ -3601,6 +3619,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1598590785}
   m_CullTransparentMesh: 1
+--- !u!114 &1598590789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598590785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfb8291dae0cf1b49854a8c5460b46a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  energyText: {fileID: 1598590787}
 --- !u!1 &1708856681
 GameObject:
   m_ObjectHideFlags: 0
@@ -3766,6 +3797,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1949330668}
+  - component: {fileID: 1949330669}
   m_Layer: 5
   m_Name: PlayerDeckArea
   m_TagString: Untagged
@@ -3780,8 +3812,9 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1949330667}
-  m_LocalRotation: {x: -0.00000045821074, y: -0.13052599, z: -0.00000015040861, w: 0.9914449}
-  m_LocalPosition: {x: 0, y: 0, z: 26}
+  m_LocalRotation: {x: -0.00000044703478, y: 0.00000008573319, z: 0.00000025164084,
+    w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 10.641266}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3793,12 +3826,41 @@ RectTransform:
   - {fileID: 273698990}
   m_Father: {fileID: 848005252}
   m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: -15, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 870, y: -330}
+  m_AnchoredPosition: {x: 884.9938, y: -329.99988}
   m_SizeDelta: {x: 165, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1949330669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1949330667}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd6022df1b3c7e842a71280e63eea8ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonImage: {fileID: 273698991}
+  hoverColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  clickEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 944394755}
+        m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
+        m_MethodName: OnPlayerDraw
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2008633988
 GameObject:
   m_ObjectHideFlags: 0
@@ -4019,6 +4081,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2084838623}
+  - component: {fileID: 2084838624}
   m_Layer: 5
   m_Name: EnemyDeckArea
   m_TagString: Untagged
@@ -4052,6 +4115,35 @@ RectTransform:
   m_AnchoredPosition: {x: 724, y: 315}
   m_SizeDelta: {x: 150, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2084838624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084838622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd6022df1b3c7e842a71280e63eea8ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonImage: {fileID: 692321730}
+  hoverColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  clickEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 944394755}
+        m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
+        m_MethodName: OnEnemyDraw
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2091012925
 GameObject:
   m_ObjectHideFlags: 0
@@ -4402,7 +4494,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -4423,7 +4515,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2110521407}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 944394755}
+        m_TargetAssemblyTypeName: BattleManager, Assembly-CSharp
+        m_MethodName: OnClickTurnEnd
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2110521407
 MonoBehaviour:
   m_ObjectHideFlags: 0
