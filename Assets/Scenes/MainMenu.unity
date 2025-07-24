@@ -1134,8 +1134,7 @@ MonoBehaviour:
   m_text: "\u5361\u5361\u5927\u4E82\u9B25"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 93426c800cdac92489b16c9b463614cf, type: 2}
-  m_sharedMaterial: {fileID: 3147544405738279154, guid: 93426c800cdac92489b16c9b463614cf,
-    type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: b23eba9b336048e43b821d62d43e68d0, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

@@ -8,8 +8,6 @@ using TMPro;
 public class CardDisplay : MonoBehaviour
 {
 	#region 欄位
-	[Tooltip("卡牌")] public Card card;
-
 	[SerializeField, Header("卡牌")] Card[] cards;
 	[SerializeField, Header("生物卡")] BiologyCard[] biologyCards;
 	[SerializeField, Header("法術卡")] SpellCard[] spellCards;
@@ -25,6 +23,8 @@ public class CardDisplay : MonoBehaviour
 	[SerializeField, Header("卡背")] Image bgImage;
 	[SerializeField, Header("攻擊圖示")] Image atkImage;
 	[SerializeField, Header("血量圖示")] Image hpImage;
+
+	[Tooltip("卡牌")] public Card card;
 	#endregion
 
 	private void Start()

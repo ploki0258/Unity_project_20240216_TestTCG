@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Deck : MonoBehaviour
@@ -7,13 +6,12 @@ public class Deck : MonoBehaviour
 	[SerializeField, Header("牌組生成位置")] Transform deckPanel;
 	[SerializeField, Header("卡牌生成位置")] Transform libraryPanel;
 	[SerializeField, Header("卡牌預製物")] GameObject cardPrefab;
+	[SerializeField, Header("牌組最少數量")] int minDeck = 0;
+	[SerializeField, Header("牌組最大數量")] int maxDeck = 0;
+	[SerializeField, Header("同名卡最大數量")] int maxCard = 4; // 同名卡最大數量
 
 	private Dictionary<int, GameObject> libraryDic = new Dictionary<int, GameObject>();
 	private Dictionary<int, GameObject> deckDic = new Dictionary<int, GameObject>();
-
-	public int minDeck = 0;
-	public int maxDeck = 0;
-	public int maxCard = 4; // 同名卡最大數量
 
 	void Start()
 	{

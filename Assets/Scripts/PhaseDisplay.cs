@@ -5,7 +5,7 @@ public class PhaseDisplay : MonoBehaviour
 {
 	[SerializeField, Header("階段")] Text phaseText;
 	[SerializeField, Header("階段")] Image phaseImg;
-	[SerializeField, Header("階段底色")] Color playerPhaseColor, enemyPhaseColor;
+	[SerializeField, Header("回合底色")] Color playerPhaseColor, enemyPhaseColor;
 
 	void Start()
 	{

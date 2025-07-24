@@ -623,7 +623,7 @@ GameObject:
   - component: {fileID: 690288232}
   - component: {fileID: 690288231}
   m_Layer: 0
-  m_Name: "\u80CC\u666F\u81EA\u52D5\u8B8A\u63DB"
+  m_Name: BackgoundManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -636,7 +636,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 690288230}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3670fdcaa7352974492b6f326590812a, type: 3}
   m_Name: 
@@ -653,7 +653,6 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 83b26219807ab2b478cf6d7f1cd5ff1b, type: 2}
   - {fileID: 2100000, guid: fa754103425f24745b6edaf85127cf47, type: 2}
   changeInterval: 1
-  mainCamera: {fileID: 153358386}
 --- !u!4 &690288232
 Transform:
   m_ObjectHideFlags: 0

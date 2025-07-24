@@ -5,22 +5,15 @@ public class EnergyDisplay : MonoBehaviour
 {
 	[SerializeField, Header("能量")] TextMeshProUGUI energyText;
 
-	BattleManager battleManager;
-
-	private void Awake()
-	{
-		battleManager = FindObjectOfType<BattleManager>();
-	}
-
 	private void Start()
 	{
 		UpdateEnergyText();
-		battleManager.onEnergyChange += UpdateEnergyText;
+		BattleManager.instance.onEnergyChange += UpdateEnergyText;
 	}
 
 	private void OnDisable()
 	{
-		battleManager.onEnergyChange -= UpdateEnergyText;
+		BattleManager.instance.onEnergyChange -= UpdateEnergyText;
 	}
 
 	/// <summary>
@@ -28,6 +21,6 @@ public class EnergyDisplay : MonoBehaviour
 	/// </summary>
 	void UpdateEnergyText()
 	{
-		energyText.text = $"{battleManager.energy} / {battleManager.maxInitEnergy}";
+		energyText.text = $"{BattleManager.instance.energy} / {BattleManager.instance.maxInitEnergy}";
 	}
 }

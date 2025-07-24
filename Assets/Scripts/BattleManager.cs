@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -221,9 +222,10 @@ public class BattleManager : MonoBehaviour
 			// 當牌組數量 大於 所抽張數時 則抽取相應張數
 			// 否則牌組數量 小於 所抽張數時 則抽取剩餘張數
 			GameObject card = Instantiate(cardPrefab, hand); // 實例化卡牌
-			card.GetComponent<CardDisplay>().card = drawDeck[0]; // 抽取第一張卡牌
+			card.GetComponent<CardDisplay>().card = CardStore.instance.CopyCard(drawDeck[0].id); // 抽取第一張卡牌
 			drawDeck.RemoveAt(0); // 從牌組中移除
-								  // 盡可能抽取剩餘的卡牌
+
+			// 盡可能抽取剩餘的卡牌
 			if (drawDeck.Count == 0)
 				break; // 如果沒有卡牌可抽，則退出循環
 		}
@@ -250,7 +252,6 @@ public class BattleManager : MonoBehaviour
 	public void OnClickTurnEnd()
 	{
 		TurnEnd();
-		//TurnChange();
 	}
 
 	void TurnEnd()
@@ -263,17 +264,21 @@ public class BattleManager : MonoBehaviour
 		{
 			currentPhase = PhaseType.enemyEnd; // 對手結束主要階段，進入對手結束階段
 		}
+		StartCoroutine(TurnChange());
 	}
 
 	// 待處理 回合交換
-	void TurnChange()
+	IEnumerator TurnChange()
 	{
 		if (currentPhase == PhaseType.playerEnd)
 		{
+			StartCoroutine(HandCheckEnd()); // 玩家進入結束階段，檢查手牌數量
+			yield return new WaitForSeconds(2); // 等待2秒
 			currentPhase = PhaseType.enemyDraw; // 玩家進入結束階段，進入對手抽牌階段
 		}
 		else if (currentPhase == PhaseType.enemyEnd)
 		{
+			yield return new WaitForSeconds(2); // 等待2秒
 			currentPhase = PhaseType.playerDraw; // 對手進入結束階段，進入玩家抽牌階段
 		}
 	}
@@ -285,8 +290,6 @@ public class BattleManager : MonoBehaviour
 		{
 			DrawCard(PlayerType.player, 1); // 玩家抽一張卡牌
 											// 在抽牌之後 進行能量的處理
-			IncreaseEnergyMax(1, maxEnergy);  // 初始能量增加1
-			SetEnergyFull();    // 能量恢復到最大值
 		}
 		else if (currentPhase == PhaseType.enemyDraw)
 		{
@@ -295,6 +298,44 @@ public class BattleManager : MonoBehaviour
 	}
 
 	// 結束階段時 進行手牌上限的檢查 部份效果的處理與結算etc.
+	IEnumerator HandCheckEnd()
+	{
+		// 在結束階段時 檢查手牌數量是否超過上限
+		if (isHandMax) // 如果啟用手牌上限
+		{
+			List<Card> hand = new List<Card>();
+			switch (currentPhase)
+			{
+				case PhaseType.playerEnd:
+					hand = playerHand.GetComponentsInChildren<CardDisplay>().Select(cd => cd.card).ToList(); // 獲取玩家手牌
+					break;
+				case PhaseType.enemyEnd:
+					hand = enemyHand.GetComponentsInChildren<CardDisplay>().Select(cd => cd.card).ToList(); // 獲取對手手牌
+					break;
+			}
+			if (hand.Count > maxHandCount) // 如果手牌數量超過上限
+			{
+				int excessCount = hand.Count - maxHandCount; // 計算超出上限的張數
+				Debug.Log($"手牌數量超過上限，需捨棄 {excessCount} 張手牌");
+				// 選擇要丟棄的手牌
+				// 等待玩家選擇要丟棄的手牌
+				// 如果手牌沒有小於上限的話 就一直等待 直至手牌小於上限
+				while (excessCount > 0)
+				{
+					// 這裡可以添加UI提示讓玩家選擇要丟棄的手牌
+					// 假設玩家選擇了要丟棄的手牌，並且已經處理了丟棄邏輯
+					// 例如：hand.Remove(selectedCard);
+					excessCount--; // 模擬丟棄一張手牌
+					yield return new WaitForSeconds(1);
+				}
+			}
+			else
+			{
+				Debug.Log("手牌數量未超過上限，無需捨棄");
+			}
+		}
+
+	}
 
 	// 當前階段
 	#region 階段
@@ -304,6 +345,29 @@ public class BattleManager : MonoBehaviour
 		set
 		{
 			_currentPhase = value;
+
+			switch (value)
+			{
+				case PhaseType.none:
+					break;
+				case PhaseType.gameInit:
+					break;
+				case PhaseType.playerDraw:
+					IncreaseEnergyMax(1, maxEnergy);  // 初始能量增加1
+					SetEnergyFull();    // 能量恢復到最大值
+					break;
+				case PhaseType.playerMain:
+					break;
+				case PhaseType.playerEnd:
+					break;
+				case PhaseType.enemyDraw:
+					break;
+				case PhaseType.enemyMain:
+					break;
+				case PhaseType.enemyEnd:
+					break;
+			}
+
 			onPhaseChange?.Invoke(); // 觸發階段變化事件
 		}
 	}
@@ -313,7 +377,7 @@ public class BattleManager : MonoBehaviour
 
 	// 能量
 	#region 能量
-	public int energy
+	public int energy   // 當前能量
 	{
 		get => _energy; // 獲取當前能量
 		set
@@ -323,7 +387,7 @@ public class BattleManager : MonoBehaviour
 		}
 	}
 	int _energy = 0;
-	public int maxInitEnergy
+	public int maxInitEnergy    // 最大能量初始值
 	{
 		get => _maxInitEnergy;
 		set
@@ -332,7 +396,7 @@ public class BattleManager : MonoBehaviour
 			onEnergyChange?.Invoke(); // 觸發能量變化事件
 		}
 	}
-	int _maxInitEnergy = 0; // 最大能量初始值
+	int _maxInitEnergy = 0;
 	public Action onEnergyChange; // 能量變化事件
 	#endregion
 }
