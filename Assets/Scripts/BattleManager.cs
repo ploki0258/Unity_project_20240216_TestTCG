@@ -23,10 +23,15 @@ public class BattleManager : MonoBehaviour
 	[SerializeField, Header("是否啟用手牌上限")] bool isHandMax = true; // 是否啟用手牌上限
 	[SerializeField, Header("手牌上限"), Range(0, 10)] int maxHandCount = 9; // 手牌上限
 	[SerializeField, Header("能量上限"), Range(0, 20)] int maxEnergy = 10;  // 最大能量
+	[SerializeField, Header("最大召喚次數")] int[] summonCountMax = new int[2] { 2, 2 };
 
 	public List<Card> playerDeckList = new List<Card>(); // 玩家牌組列表
 	public List<Card> enemyDeckList = new List<Card>(); // 敵人牌組列表
 	public List<Card> shuffletDeck = new List<Card>();
+
+	int[] summonCount = new int[2];
+	GameObject waitingCard = null;
+	PlayerType waitingPlayer = PlayerType.player;
 	#endregion
 
 	SimpleDeckShufflet simpleDeck = new SimpleDeckShufflet(); // 使用簡單的隨機洗牌算法
@@ -88,6 +93,11 @@ public class BattleManager : MonoBehaviour
 		maxInitEnergy += value; // 增加能量最大值
 		Debug.Log($"能量上限：{maxInitEnergy}");
 	}
+
+	/// <summary>
+	/// 設置召喚次數
+	/// </summary>
+	void SetSummonCounter() => summonCount = summonCountMax;
 
 	/// <summary>
 	/// 載入牌組數據
@@ -223,6 +233,8 @@ public class BattleManager : MonoBehaviour
 			// 否則牌組數量 小於 所抽張數時 則抽取剩餘張數
 			GameObject card = Instantiate(cardPrefab, hand); // 實例化卡牌
 			card.GetComponent<CardDisplay>().card = CardStore.instance.CopyCard(drawDeck[0].id); // 抽取第一張卡牌
+			card.GetComponent<BattleCard>().playerId = (int)player;
+			card.GetComponent<BattleCard>().cardState = CardState.inHand;
 			drawDeck.RemoveAt(0); // 從牌組中移除
 
 			// 盡可能抽取剩餘的卡牌
@@ -337,6 +349,58 @@ public class BattleManager : MonoBehaviour
 
 	}
 
+	public void SummonRequest(PlayerType playerType, GameObject card)
+	{
+		GameObject[] blocks = null;
+		bool isEmptyBlock = false;
+
+		switch (playerType)
+		{
+			case PlayerType.player:
+				blocks = playerAreas;
+				break;
+			case PlayerType.enemy:
+				blocks = enemyAreas;
+				break;
+		}
+
+		// 
+		if (summonCount[0] > 0)
+		{
+			foreach (GameObject blockItem in blocks)
+			{
+				if (blockItem.GetComponent<Block>().card == null)
+				{
+					Block tempBlock = blockItem.GetComponent<Block>();
+					tempBlock.highlightBlock.SetActive(true);
+					//tempBlock.aniCard.SetTrigger("highlight");
+
+					isEmptyBlock = true;
+				}
+			}
+		}
+
+		if (isEmptyBlock)
+		{
+			waitingCard = card;
+			waitingPlayer = playerType;
+		}
+	}
+
+	public void SummonConfirm(Transform block)
+	{
+		Summon(waitingPlayer, waitingCard, block);
+	}
+
+	public void Summon(PlayerType playerType, GameObject card, Transform block)
+	{
+		card.transform.SetParent(block);
+		card.transform.localPosition = Vector3.zero;
+		card.transform.GetComponent<BattleCard>().cardState = CardState.inArea;
+		block.GetComponent<Block>().card = card;
+		summonCount[(int)playerType]--;
+	}
+
 	// 當前階段
 	#region 階段
 	public PhaseType currentPhase
@@ -355,6 +419,7 @@ public class BattleManager : MonoBehaviour
 				case PhaseType.playerDraw:
 					IncreaseEnergyMax(1, maxEnergy);  // 初始能量增加1
 					SetEnergyFull();    // 能量恢復到最大值
+					SetSummonCounter();
 					break;
 				case PhaseType.playerMain:
 					break;
@@ -425,8 +490,8 @@ public enum PhaseType
 /// </summary>
 public enum PlayerType
 {
-	player, // 玩家
-	enemy // 對手
+	player = 0, // 玩家
+	enemy = 1 // 對手
 }
 
 public interface IDeckShufflet

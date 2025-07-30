@@ -544,6 +544,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1460935268502780386}
   - component: {fileID: 3443394205123393501}
+  - component: {fileID: 2862283667514426216}
+  - component: {fileID: 74414204884045371}
   m_Layer: 5
   m_Name: Card Fight
   m_TagString: Untagged
@@ -570,7 +572,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 150, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3443394205123393501
 MonoBehaviour:
@@ -624,6 +626,33 @@ MonoBehaviour:
   bgImage: {fileID: 1892996904667208636}
   atkImage: {fileID: 4280517145730228798}
   hpImage: {fileID: 1160426299901249341}
+--- !u!114 &2862283667514426216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5059166999305593781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d86494efcab510c42b9dce0384b41380, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoomScale: 1.1
+--- !u!114 &74414204884045371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5059166999305593781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 096cb7c55510f8f4b8aa11f1c840b4ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardState: 0
+  playerId: 0
 --- !u!1 &5139756143168255076
 GameObject:
   m_ObjectHideFlags: 0

@@ -45,8 +45,13 @@ public class ClickCard : MonoBehaviour, IPointerDownHandler
 	}*/
 }
 
+/// <summary>
+/// 卡牌狀態
+/// </summary>
 public enum CardState
 {
 	inDeck,		// 在牌組中
 	inLibrary,  // 在倉庫中
+	inHand,		// 在手牌中
+	inArea,     // 在場上
 }

@@ -80,6 +80,11 @@ public class CardStore
 		return null;
 	}
 
+	/// <summary>
+	/// 依據ID取得卡牌腳本化物件
+	/// </summary>
+	/// <param name="id">卡牌ID</param>
+	/// <returns></returns>
 	public CardData GetCardDataById(int id)
 	{
 		for (int i = 0; i < cardDataList.Count; i++)
@@ -166,28 +171,36 @@ public class CardStore
 	public Card CopyCard(int id)
 	{
 		Card copyCard = GetCardById(id);
-		if (copyCard == null)
+		CardData cardData = GetCardDataById(copyCard.id);
+
+		if (copyCard == null || cardData == null)
 		{
 			Debug.Log($"無法找到ID為{id}的卡牌，無法複製。");
 			return null;
 		}
 
 		// 根據卡牌類型創建新的卡牌實例
-		switch (copyCard.cardType)
+		switch (cardData.cardType)
 		{
 			case CardType.Biology:
 				var biologyCard = (BiologyCard)copyCard;
 				copyCard = new BiologyCard(biologyCard.id, biologyCard.cardName, biologyCard.cardCost, biologyCard.cardRare, biologyCard.cardDescription, biologyCard.attack, biologyCard.health, biologyCard.cardFeature);
+				copyCard.cardBG = cardData.cardBG; // 複製卡牌背景圖
+				copyCard.cardIcon = cardData.cardIcon; // 複製卡牌圖示
 				break;
 			//return copyCard;
 			case CardType.Spell:
 				var spellCard = (SpellCard)copyCard;
 				copyCard = new SpellCard(spellCard.id, spellCard.cardName, spellCard.cardCost, spellCard.cardRare, spellCard.cardDescription);
+				copyCard.cardBG = cardData.cardBG; // 複製卡牌背景圖
+				copyCard.cardIcon = cardData.cardIcon; // 複製卡牌圖示
 				break;
 			//return copyCard;
 			case CardType.Equipment:
 				var equipmentCard = (EquipmentCard)copyCard;
 				copyCard = new EquipmentCard(equipmentCard.id, equipmentCard.cardName, equipmentCard.cardCost, equipmentCard.cardRare, equipmentCard.cardDescription);
+				copyCard.cardBG = cardData.cardBG; // 複製卡牌背景圖
+				copyCard.cardIcon = cardData.cardIcon; // 複製卡牌圖示
 				break;
 			//return copyCard;
 			default:

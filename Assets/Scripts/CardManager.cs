@@ -1,10 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CardManager : MonoBehaviour
 {
-	[Header("卡牌預製物")][SerializeField] GameObject cardPrefab = null;
-	[Header("卡牌最大數量")][SerializeField] int maxCardCount;
-	[Header("卡牌起始位置")][SerializeField] Vector3 firstPos;
+	//[Header("卡牌預製物")][SerializeField] GameObject cardPrefab = null;
+	//[Header("卡牌最大數量")][SerializeField] int maxCardCount;
+	//[Header("卡牌起始位置")][SerializeField] Vector3 firstPos;
 }
 
 /// <summary>

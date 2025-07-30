@@ -207,6 +207,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1549918399}
     m_Modifications:
+    - target: {fileID: 4082629578356083006, guid: b45882dce06767d478e114cae812acfc,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 36f39f9ab0af50c4eb5feab0693fe229, type: 2}
+    - target: {fileID: 4968617423168657459, guid: b45882dce06767d478e114cae812acfc,
+        type: 3}
+      propertyPath: aniCard
+      value: 
+      objectReference: {fileID: 80448486}
     - target: {fileID: 6628047951362045566, guid: b45882dce06767d478e114cae812acfc,
         type: 3}
       propertyPath: m_Pivot.x
@@ -331,6 +341,12 @@ RectTransform:
 --- !u!1 &80448485 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7577512840331584933, guid: b45882dce06767d478e114cae812acfc,
+    type: 3}
+  m_PrefabInstance: {fileID: 80448483}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &80448486 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4082629578356083006, guid: b45882dce06767d478e114cae812acfc,
     type: 3}
   m_PrefabInstance: {fileID: 80448483}
   m_PrefabAsset: {fileID: 0}
@@ -971,6 +987,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1549918399}
     m_Modifications:
+    - target: {fileID: 4082629578356083006, guid: b45882dce06767d478e114cae812acfc,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 36f39f9ab0af50c4eb5feab0693fe229, type: 2}
+    - target: {fileID: 4968617423168657459, guid: b45882dce06767d478e114cae812acfc,
+        type: 3}
+      propertyPath: aniCard
+      value: 
+      objectReference: {fileID: 431795713}
     - target: {fileID: 6628047951362045566, guid: b45882dce06767d478e114cae812acfc,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1095,6 +1121,12 @@ RectTransform:
 --- !u!1 &431795712 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7577512840331584933, guid: b45882dce06767d478e114cae812acfc,
+    type: 3}
+  m_PrefabInstance: {fileID: 431795710}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &431795713 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4082629578356083006, guid: b45882dce06767d478e114cae812acfc,
     type: 3}
   m_PrefabInstance: {fileID: 431795710}
   m_PrefabAsset: {fileID: 0}
@@ -2316,6 +2348,7 @@ MonoBehaviour:
   isHandMax: 1
   maxHandCount: 9
   maxEnergy: 10
+  summonCountMax: 0200000002000000
 --- !u!4 &944394756
 Transform:
   m_ObjectHideFlags: 0
@@ -2706,6 +2739,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1549918399}
     m_Modifications:
+    - target: {fileID: 4082629578356083006, guid: b45882dce06767d478e114cae812acfc,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 36f39f9ab0af50c4eb5feab0693fe229, type: 2}
+    - target: {fileID: 4968617423168657459, guid: b45882dce06767d478e114cae812acfc,
+        type: 3}
+      propertyPath: aniCard
+      value: 
+      objectReference: {fileID: 984543066}
     - target: {fileID: 6628047951362045566, guid: b45882dce06767d478e114cae812acfc,
         type: 3}
       propertyPath: m_Pivot.x
@@ -2830,6 +2873,12 @@ RectTransform:
 --- !u!1 &984543065 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7577512840331584933, guid: b45882dce06767d478e114cae812acfc,
+    type: 3}
+  m_PrefabInstance: {fileID: 984543063}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &984543066 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4082629578356083006, guid: b45882dce06767d478e114cae812acfc,
     type: 3}
   m_PrefabInstance: {fileID: 984543063}
   m_PrefabAsset: {fileID: 0}
@@ -3377,6 +3426,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1549918399}
     m_Modifications:
+    - target: {fileID: 4082629578356083006, guid: b45882dce06767d478e114cae812acfc,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 36f39f9ab0af50c4eb5feab0693fe229, type: 2}
+    - target: {fileID: 4968617423168657459, guid: b45882dce06767d478e114cae812acfc,
+        type: 3}
+      propertyPath: aniCard
+      value: 
+      objectReference: {fileID: 1526139551}
     - target: {fileID: 6628047951362045566, guid: b45882dce06767d478e114cae812acfc,
         type: 3}
       propertyPath: m_Pivot.x
@@ -3501,6 +3560,12 @@ RectTransform:
 --- !u!1 &1526139550 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7577512840331584933, guid: b45882dce06767d478e114cae812acfc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1526139548}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1526139551 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4082629578356083006, guid: b45882dce06767d478e114cae812acfc,
     type: 3}
   m_PrefabInstance: {fileID: 1526139548}
   m_PrefabAsset: {fileID: 0}
@@ -4880,6 +4945,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CardBlock
+      objectReference: {fileID: 0}
+    - target: {fileID: 8084914360563540322, guid: b45882dce06767d478e114cae812acfc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
