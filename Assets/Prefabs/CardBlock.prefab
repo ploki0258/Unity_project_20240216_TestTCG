@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3154683505658726774}
   - component: {fileID: 6360556140742454187}
   - component: {fileID: 4968617423168657459}
+  - component: {fileID: 7513350229987121375}
   m_Layer: 5
   m_Name: CardBlock
   m_TagString: Untagged
@@ -91,7 +92,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightBlock: {fileID: 8084914360563540322}
+  aniCard: {fileID: 7513350229987121375}
   card: {fileID: 0}
+--- !u!95 &7513350229987121375
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7577512840331584933}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 36f39f9ab0af50c4eb5feab0693fe229, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8084914360563540322
 GameObject:
   m_ObjectHideFlags: 0
@@ -151,7 +174,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 1, b: 0.50980395, a: 1}
+  m_Color: {r: 0, g: 1, b: 0.509804, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

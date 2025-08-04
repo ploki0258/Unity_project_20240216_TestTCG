@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 
 /// <summary>
@@ -24,14 +25,17 @@ public class BattleManager : MonoBehaviour
 	[SerializeField, Header("手牌上限"), Range(0, 10)] int maxHandCount = 9; // 手牌上限
 	[SerializeField, Header("能量上限"), Range(0, 20)] int maxEnergy = 10;  // 最大能量
 	[SerializeField, Header("最大召喚次數")] int[] summonCountMax = new int[2] { 2, 2 };
+	[SerializeField, Header("攻擊箭頭物件")] GameObject attackingArrow = null;
 
 	public List<Card> playerDeckList = new List<Card>(); // 玩家牌組列表
 	public List<Card> enemyDeckList = new List<Card>(); // 敵人牌組列表
 	public List<Card> shuffletDeck = new List<Card>();
 
 	int[] summonCount = new int[2];
+	bool isCanSummon = false;
 	GameObject waitingCard = null;
 	PlayerType waitingPlayer = PlayerType.player;
+	GameObject attackingCard = null;
 	#endregion
 
 	SimpleDeckShufflet simpleDeck = new SimpleDeckShufflet(); // 使用簡單的隨機洗牌算法
@@ -97,7 +101,13 @@ public class BattleManager : MonoBehaviour
 	/// <summary>
 	/// 設置召喚次數
 	/// </summary>
-	void SetSummonCounter() => summonCount = summonCountMax;
+	void SetSummonCounter()
+	{
+		for (int i = 0; i < summonCountMax.Length; i++)
+		{
+			summonCount[i] = summonCountMax[i];
+		}
+	}
 
 	/// <summary>
 	/// 載入牌組數據
@@ -285,12 +295,12 @@ public class BattleManager : MonoBehaviour
 		if (currentPhase == PhaseType.playerEnd)
 		{
 			StartCoroutine(HandCheckEnd()); // 玩家進入結束階段，檢查手牌數量
-			yield return new WaitForSeconds(2); // 等待2秒
+			yield return new WaitForSeconds(1); // 等待秒數
 			currentPhase = PhaseType.enemyDraw; // 玩家進入結束階段，進入對手抽牌階段
 		}
 		else if (currentPhase == PhaseType.enemyEnd)
 		{
-			yield return new WaitForSeconds(2); // 等待2秒
+			yield return new WaitForSeconds(1); // 等待秒數
 			currentPhase = PhaseType.playerDraw; // 對手進入結束階段，進入玩家抽牌階段
 		}
 	}
@@ -338,7 +348,7 @@ public class BattleManager : MonoBehaviour
 					// 假設玩家選擇了要丟棄的手牌，並且已經處理了丟棄邏輯
 					// 例如：hand.Remove(selectedCard);
 					excessCount--; // 模擬丟棄一張手牌
-					yield return new WaitForSeconds(1);
+					yield return new WaitForSeconds(0.1f);
 				}
 			}
 			else
@@ -349,23 +359,47 @@ public class BattleManager : MonoBehaviour
 
 	}
 
+	void NextPhase()
+	{
+		if ((int)currentPhase == System.Enum.GetNames(currentPhase.GetType()).Length - 1)
+		{
+			currentPhase = PhaseType.playerDraw;
+		}
+		else
+		{
+			currentPhase += 1;
+		}
+	}
+
+	#region Summon 召喚
+	/// <summary>
+	/// 召喚請求
+	/// </summary>
+	/// <param name="playerType">玩家類型</param>
+	/// <param name="card">要召喚的卡牌物件</param>
 	public void SummonRequest(PlayerType playerType, GameObject card)
 	{
+		if (isCanSummon == false)
+			return;
+
 		GameObject[] blocks = null;
 		bool isEmptyBlock = false;
 
-		switch (playerType)
+		if (playerType == PlayerType.player && currentPhase == PhaseType.playerMain)
 		{
-			case PlayerType.player:
-				blocks = playerAreas;
-				break;
-			case PlayerType.enemy:
-				blocks = enemyAreas;
-				break;
+			blocks = playerAreas;
+		}
+		else if (playerType == PlayerType.enemy && currentPhase == PhaseType.enemyMain)
+		{
+			blocks = enemyAreas;
+		}
+		else
+		{
+			return;
 		}
 
-		// 
-		if (summonCount[0] > 0)
+		// 召喚次數 大於 0
+		if (summonCount[(int)playerType] > 0)
 		{
 			foreach (GameObject blockItem in blocks)
 			{
@@ -373,13 +407,13 @@ public class BattleManager : MonoBehaviour
 				{
 					Block tempBlock = blockItem.GetComponent<Block>();
 					tempBlock.highlightBlock.SetActive(true);
-					//tempBlock.aniCard.SetTrigger("highlight");
+					tempBlock.aniCard.SetBool("highlight", true);
 
 					isEmptyBlock = true;
 				}
 			}
 		}
-
+		// 若場上的格子為空
 		if (isEmptyBlock)
 		{
 			waitingCard = card;
@@ -390,15 +424,90 @@ public class BattleManager : MonoBehaviour
 	public void SummonConfirm(Transform block)
 	{
 		Summon(waitingPlayer, waitingCard, block);
+
+		GameObject[] blocks = null;
+		switch (waitingPlayer)
+		{
+			case PlayerType.player:
+				blocks = playerAreas;
+				break;
+			case PlayerType.enemy:
+				blocks = enemyAreas;
+				break;
+		}
+
+		foreach (GameObject blockItem in blocks)
+		{
+			// 召喚確認後 關閉所有召喚相關的顯示
+			Block tempBlock = blockItem.GetComponent<Block>();
+			tempBlock.highlightBlock.SetActive(false);
+			tempBlock.aniCard.SetBool("highlight", false);
+		}
 	}
 
-	public void Summon(PlayerType playerType, GameObject card, Transform block)
+	private void Summon(PlayerType playerType, GameObject card, Transform block)
 	{
 		card.transform.SetParent(block);
 		card.transform.localPosition = Vector3.zero;
 		card.transform.GetComponent<BattleCard>().cardState = CardState.inArea;
+		int atk = card.transform.GetComponent<BattleCard>().SetAttackCount(1);
 		block.GetComponent<Block>().card = card;
 		summonCount[(int)playerType]--;
+	}
+	#endregion
+
+	public void AttackRequest(PlayerType playerType, GameObject card)
+	{
+		GameObject[] blocks = null;
+		bool isCardBlock = false;
+
+		if (playerType == PlayerType.player && currentPhase == PhaseType.playerMain)
+		{
+			blocks = enemyAreas;
+		}
+		else if (playerType == PlayerType.enemy && currentPhase == PhaseType.enemyMain)
+		{
+			blocks = playerAreas;
+		}
+		else
+		{
+			return;
+		}
+
+		foreach (GameObject blockItem in blocks)
+		{
+			if (blockItem.GetComponent<Block>().card != null)
+			{
+				Block tempBlock = blockItem.GetComponent<Block>();
+
+				isCardBlock = true;
+			}
+		}
+
+		if (isCardBlock)
+		{
+			attackingCard = card;
+			// 產生箭頭
+			GameObject arrow = Instantiate(attackingArrow, card.transform.position, card.transform.rotation);
+			arrow.GetComponent<Arrow>().SetStartPoint(attackingCard.transform.position);
+		}
+	}
+
+	public void AttackConfirm(GameObject target)
+	{
+
+	}
+
+	void Attack(GameObject card, GameObject enemyCard)
+	{
+		Card card1 = card.GetComponent<CardDisplay>().card;
+		BiologyCard biologyPlayer = card1 as BiologyCard;
+
+		Card card2 = enemyCard.GetComponent<CardDisplay>().card;
+		BiologyCard biologyEnemy = card2 as BiologyCard;
+
+		biologyPlayer.health -= biologyEnemy.attack;
+		biologyEnemy.health -= biologyPlayer.attack;
 	}
 
 	// 當前階段
@@ -409,6 +518,7 @@ public class BattleManager : MonoBehaviour
 		set
 		{
 			_currentPhase = value;
+			isCanSummon = value == PhaseType.playerMain || value == PhaseType.enemyMain ? true : false;
 
 			switch (value)
 			{
@@ -417,9 +527,9 @@ public class BattleManager : MonoBehaviour
 				case PhaseType.gameInit:
 					break;
 				case PhaseType.playerDraw:
+					SetSummonCounter();
 					IncreaseEnergyMax(1, maxEnergy);  // 初始能量增加1
 					SetEnergyFull();    // 能量恢復到最大值
-					SetSummonCounter();
 					break;
 				case PhaseType.playerMain:
 					break;
