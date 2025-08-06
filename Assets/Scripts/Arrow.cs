@@ -33,11 +33,15 @@ public class Arrow : MonoBehaviour
 		arrow.localEulerAngles = new Vector3(0f, 0f, (float)(arrowTheta * 180 / Mathf.PI));
 	}
 
+	/// <summary>
+	/// 設置初始點
+	/// </summary>
+	/// <param name="startPoint">起始點</param>
 	public void SetStartPoint(Vector2 startPoint)
 	{
-		float width = Screen.width;
-		float height = Screen.height;
+		double width = Screen.width;
+		double height = Screen.height;
 
-		startPoint = startPoint - new Vector2((width / 2), (height / 2));
+		startPoint -= new Vector2((float)(width / 2), (float)(height / 2));
 	}
 }

@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 
 /// <summary>
@@ -26,6 +25,7 @@ public class BattleManager : MonoBehaviour
 	[SerializeField, Header("能量上限"), Range(0, 20)] int maxEnergy = 10;  // 最大能量
 	[SerializeField, Header("最大召喚次數")] int[] summonCountMax = new int[2] { 2, 2 };
 	[SerializeField, Header("攻擊箭頭物件")] GameObject attackingArrow = null;
+	[SerializeField, Header("生命值物件")] GameObject playerHealth, enemyHealth = null;
 
 	public List<Card> playerDeckList = new List<Card>(); // 玩家牌組列表
 	public List<Card> enemyDeckList = new List<Card>(); // 敵人牌組列表
@@ -35,7 +35,10 @@ public class BattleManager : MonoBehaviour
 	bool isCanSummon = false;
 	GameObject waitingCard = null;
 	PlayerType waitingPlayer = PlayerType.player;
+	PlayerType attackingPlayer;
+
 	GameObject attackingCard = null;
+	GameObject arrow;
 	#endregion
 
 	SimpleDeckShufflet simpleDeck = new SimpleDeckShufflet(); // 使用簡單的隨機洗牌算法
@@ -56,6 +59,7 @@ public class BattleManager : MonoBehaviour
 	// 遊戲開始：載入數據 牌組洗牌 抽起始手牌
 	// 回合階段
 
+	#region 遊戲功能初始化與設置
 	/// <summary>
 	/// 初始化遊戲：
 	/// 1. 載入數據
@@ -252,7 +256,9 @@ public class BattleManager : MonoBehaviour
 				break; // 如果沒有卡牌可抽，則退出循環
 		}
 	}
+	#endregion
 
+	#region 回合流程
 	public void OnPlayerDraw()
 	{
 		if (currentPhase == PhaseType.playerDraw)
@@ -289,7 +295,7 @@ public class BattleManager : MonoBehaviour
 		StartCoroutine(TurnChange());
 	}
 
-	// 待處理 回合交換
+	// 回合交換
 	IEnumerator TurnChange()
 	{
 		if (currentPhase == PhaseType.playerEnd)
@@ -356,7 +362,6 @@ public class BattleManager : MonoBehaviour
 				Debug.Log("手牌數量未超過上限，無需捨棄");
 			}
 		}
-
 	}
 
 	void NextPhase()
@@ -370,6 +375,7 @@ public class BattleManager : MonoBehaviour
 			currentPhase += 1;
 		}
 	}
+	#endregion
 
 	#region Summon 召喚
 	/// <summary>
@@ -450,7 +456,7 @@ public class BattleManager : MonoBehaviour
 		card.transform.SetParent(block);
 		card.transform.localPosition = Vector3.zero;
 		card.transform.GetComponent<BattleCard>().cardState = CardState.inArea;
-		int atk = card.transform.GetComponent<BattleCard>().SetAttackCount(1);
+		card.transform.GetComponent<BattleCard>().SetAttackCount(1);
 		block.GetComponent<Block>().card = card;
 		summonCount[(int)playerType]--;
 	}
@@ -458,8 +464,8 @@ public class BattleManager : MonoBehaviour
 
 	public void AttackRequest(PlayerType playerType, GameObject card)
 	{
-		GameObject[] blocks = null;
 		bool isCardBlock = false;
+		GameObject[] blocks = null;
 
 		if (playerType == PlayerType.player && currentPhase == PhaseType.playerMain)
 		{
@@ -479,7 +485,7 @@ public class BattleManager : MonoBehaviour
 			if (blockItem.GetComponent<Block>().card != null)
 			{
 				Block tempBlock = blockItem.GetComponent<Block>();
-
+				tempBlock.card.GetComponent<AttackTarget>().attackable = true;
 				isCardBlock = true;
 			}
 		}
@@ -487,28 +493,69 @@ public class BattleManager : MonoBehaviour
 		if (isCardBlock)
 		{
 			attackingCard = card;
+			attackingPlayer = playerType;
 			// 產生箭頭
-			GameObject arrow = Instantiate(attackingArrow, card.transform.position, card.transform.rotation);
-			arrow.GetComponent<Arrow>().SetStartPoint(attackingCard.transform.position);
+			CreateArrow(card.transform, attackingArrow);
 		}
 	}
 
 	public void AttackConfirm(GameObject target)
 	{
+		Attack(attackingCard, target);
+		DestroyArrow();
 
+		GameObject[] blocks = null;
+
+		if (attackingPlayer is PlayerType.player)
+		{
+			blocks = enemyAreas;
+		}
+		else if (attackingPlayer is PlayerType.enemy)
+		{
+			blocks = playerAreas;
+		}
+
+		foreach (GameObject blockItem in blocks)
+		{
+			Block block = blockItem.GetComponent<Block>();
+			if (block != null)
+				block.GetComponent<AttackTarget>().attackable = false;
+		}
 	}
 
-	void Attack(GameObject card, GameObject enemyCard)
+	void Attack(GameObject attacker, GameObject enemyTarget)
 	{
-		Card card1 = card.GetComponent<CardDisplay>().card;
-		BiologyCard biologyPlayer = card1 as BiologyCard;
+		AttackTarget attackPlayer = attacker.GetComponent<AttackTarget>();
+		AttackTarget attackEnemy = enemyTarget.GetComponent<AttackTarget>();
 
-		Card card2 = enemyCard.GetComponent<CardDisplay>().card;
-		BiologyCard biologyEnemy = card2 as BiologyCard;
+		if (attackEnemy.attacker == AttackerType.biology)
+		{
+			Card attackerCard = attacker.GetComponent<CardDisplay>().card;
+			BiologyCard biologyPlayer = attackerCard as BiologyCard;
 
-		biologyPlayer.health -= biologyEnemy.attack;
-		biologyEnemy.health -= biologyPlayer.attack;
+			Card enemyCard = enemyTarget.GetComponent<CardDisplay>().card;
+			BiologyCard biologyEnemy = enemyCard as BiologyCard;
+
+			attackEnemy.TakeDamage(biologyPlayer.attack);
+			attackPlayer.TakeDamage(biologyEnemy.attack);
+
+			attacker.GetComponent<BattleCard>().CostAttackCount(1);
+		}
+		else if (attackEnemy.attacker == AttackerType.player)
+		{
+			// 攻擊對手的生命值
+		}
 	}
+
+	void CreateArrow(Transform startPoint, GameObject arrowObj)
+	{
+		DestroyArrow();
+		GameObject tempArrow = Instantiate(arrowObj, startPoint);
+		tempArrow.GetComponent<Arrow>().SetStartPoint(new Vector2(startPoint.position.x, startPoint.position.y));
+		arrow = tempArrow;
+	}
+
+	void DestroyArrow() => Destroy(arrow);
 
 	// 當前階段
 	#region 階段

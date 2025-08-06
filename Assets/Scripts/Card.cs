@@ -65,20 +65,19 @@ public class BiologyCard : Card
 {
 	#region 欄位
 	[Header("攻擊力")] public int attack;
-	[Header("生命值"), Tooltip("最大血量")] public int health;
-	[Tooltip("當前生命值")] private int currHealth
+	[Header("生命值"), Tooltip("原始生命值")] public int healthMax;
+	[Tooltip("當前生命值")]
+	public int currentHealth
 	{
-		get { return _currHealth; }
+		get => _currentHealth;
 		set
 		{
 			// 確保當前生命值不會超過最大生命值
-			if (value < 0)
-				_currHealth = 0;
-			else
-				_currHealth = value;
+			currentHealth = Mathf.Clamp(value, 0, healthMax);
 		}
 	}
-	int _currHealth;
+	int _currentHealth = 0;
+	//public int atkCount;
 	[Header("卡片屬性")] public string[] cardFeature;
 	#endregion
 
@@ -87,8 +86,8 @@ public class BiologyCard : Card
 	{
 		this.cardType = CardType.Biology;
 		this.attack = _atk;
-		this.health = _hea;
-		this.currHealth = this.health;
+		this.healthMax = _hea;
+		this.currentHealth = this.healthMax;
 		this.cardFeature = _feature;
 	}
 }

@@ -7,7 +7,7 @@ public class BattleCard : MonoBehaviour, IPointerDownHandler
 	public int playerId;
 
 	int attackCount = 0;
-	
+
 	public void OnPointerDown(PointerEventData eventData)
 	{
 		if (this.gameObject.GetComponent<CardDisplay>().card is BiologyCard)
@@ -21,14 +21,25 @@ public class BattleCard : MonoBehaviour, IPointerDownHandler
 			// 在場上
 			else if (cardState == CardState.inArea)
 			{
-				BattleManager.instance.AttackRequest((PlayerType)playerId, this.gameObject);
+				if (attackCount > 0)
+				{
+					BattleManager.instance.AttackRequest((PlayerType)playerId, this.gameObject);
+				}
 			}
 		}
 	}
 
-	public int SetAttackCount(int atkCount)
+	public void SetAttackCount(int atkCount)
 	{
 		attackCount = atkCount;
-		return attackCount;
+	}
+
+	/// <summary>
+	/// 消耗攻擊次數
+	/// </summary>
+	/// <param name="atkCount">次數</param>
+	public void CostAttackCount(int atkCount)
+	{
+		attackCount -= atkCount;
 	}
 }
