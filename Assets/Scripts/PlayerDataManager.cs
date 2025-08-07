@@ -178,6 +178,7 @@ public class PlayerDataManager
 public class PlayerDatas
 {
 	#region 玩家資料
+	#region 卡牌
 	public int[] playerCards
 	{
 		get { return _playerCards; }
@@ -206,6 +207,7 @@ public class PlayerDatas
 	[SerializeField] public int[] _playerDecks = new int[CardStore.instance.cardList.Count]; // 玩家擁有的牌組陣列
 	[Tooltip("卡牌數量更新事件")]
 	public Action renewCardCountChange;
+	#endregion
 
 	#region 玩家金幣數量
 	public int playerCoins
@@ -230,15 +232,33 @@ public class PlayerDatas
 	[SerializeField] int _playerCoins = 100; // 玩家金幣數量
 	[SerializeField] public Action renewPlayerCoinsCallback; // 玩家金幣數量更新回調
 	#endregion
+
+	#region 玩家生命值
+	public int playerLifePoint
+	{
+		get => _playerLifePoint;
+		set
+		{
+			_playerLifePoint = Mathf.Clamp(value, 0, _playerLifePoint);
+
+			if (renewPlayerLifePointChange != null)
+				renewPlayerLifePointChange();
+		}
+	}
+	[SerializeField] int _playerLifePoint = 100; // 玩家生命值
+	[SerializeField] public Action renewPlayerLifePointChange; // 玩家生命值事件
+	#endregion
 	#endregion
 }
 
 /// <summary>
 /// 對手資料
 /// </summary>
+[System.Serializable]
 public class EnemyDatas
 {
 	#region 對手資料
+	#region 卡牌
 	public int[] enemyCards
 	{
 		get { return _enemyCards; }
@@ -252,5 +272,22 @@ public class EnemyDatas
 		set { _enemyDecks = value; }
 	}
 	[SerializeField] public int[] _enemyDecks; // 敵人擁有的牌組陣列
+	#endregion
+
+	#region 對手生命值
+	public int enemyLifePoint
+	{
+		get => _enemyLifePoint;
+		set
+		{
+			_enemyLifePoint = Mathf.Clamp(value, 0, _enemyLifePoint);
+
+			if (renewEnemyLifePointChange != null)
+				renewEnemyLifePointChange();
+		}
+	}
+	[SerializeField] int _enemyLifePoint = 100; // 對手生命值
+	[SerializeField] public Action renewEnemyLifePointChange; // 對手生命值事件
+	#endregion
 	#endregion
 }

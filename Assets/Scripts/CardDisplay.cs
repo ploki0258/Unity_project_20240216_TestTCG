@@ -9,9 +9,9 @@ public class CardDisplay : MonoBehaviour
 {
 	#region 欄位
 	[SerializeField, Header("卡牌")] Card[] cards;
-	[SerializeField, Header("生物卡")] BiologyCard[] biologyCards;
-	[SerializeField, Header("法術卡")] SpellCard[] spellCards;
-	[SerializeField, Header("裝備卡")] EquipmentCard[] equipmentCards;
+	[SerializeField, Header("生物卡")] BiologyCard biologyCard;
+	[SerializeField, Header("法術卡")] SpellCard spellCard;
+	[SerializeField, Header("裝備卡")] EquipmentCard equipmentCard;
 	//--- 卡牌資訊 UI 元件
 	[SerializeField, Header("卡名")] Text nameText;
 	[SerializeField, Header("效果文")] Text descriptionText;
@@ -33,6 +33,20 @@ public class CardDisplay : MonoBehaviour
 		{
 			ShowCard();
 		}
+
+		UpdateBiologyCardAttackText();
+		UpdateBiologyCardLifeText();
+		biologyCard = card as BiologyCard;
+		//Debug.Log(biologyCard.cardName);
+		//biologyCard.renewAttackChange += UpdateBiologyCardAttackText;
+		//biologyCard.renewHealthChange += UpdateBiologyCardLifeText;
+	}
+
+	private void OnDisable()
+	{
+		biologyCard = card as BiologyCard;
+		//biologyCard.renewAttackChange -= UpdateBiologyCardAttackText;
+		//biologyCard.renewHealthChange -= UpdateBiologyCardLifeText;
 	}
 
 	public void ShowCard()
@@ -56,7 +70,7 @@ public class CardDisplay : MonoBehaviour
 			case CardType.Biology:
 				BiologyCard biology = card as BiologyCard;
 				atkText.text = biology.attack.ToString();
-				hpText.text = biology.health.ToString();
+				hpText.text = biology.healthMax.ToString();
 				featureText.text = string.Join("、", biology.cardFeature);
 				break;
 			case CardType.Spell:
@@ -88,7 +102,7 @@ public class CardDisplay : MonoBehaviour
 			case CardType.Biology:
 				BiologyCard biology = this.card as BiologyCard;
 				atkText.text = biology.attack.ToString();
-				hpText.text = biology.health.ToString();
+				hpText.text = biology.healthMax.ToString();
 				featureText.text = string.Join("、", biology.cardFeature); // 將卡片屬性陣列轉為字串
 				break;
 			case CardType.Spell:
@@ -107,4 +121,8 @@ public class CardDisplay : MonoBehaviour
 				break;
 		}
 	}
+
+	void UpdateBiologyCardLifeText() => hpText.text = $"{biologyCard.currentHealth}";
+
+	void UpdateBiologyCardAttackText() => atkText.text = $"{biologyCard.attack}";
 }

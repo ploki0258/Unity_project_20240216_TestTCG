@@ -2030,8 +2030,8 @@ RectTransform:
   - {fileID: 2084838623}
   - {fileID: 1306964307}
   - {fileID: 617728276}
-  - {fileID: 950878718}
   - {fileID: 1811369650}
+  - {fileID: 950878718}
   - {fileID: 222735333}
   - {fileID: 1020956337}
   - {fileID: 2110521405}
@@ -2305,11 +2305,13 @@ MonoBehaviour:
     type: 3}
   startHandCount: 5
   isHandMax: 1
-  maxHandCount: 7
+  maxHandCount: 6
   maxEnergy: 10
   summonCountMax: 0200000002000000
   attackingArrow: {fileID: 8966582062543632406, guid: 6d89c8fe430248248899e65f27b124e2,
     type: 3}
+  playerLife: 100
+  enemyLife: 100
 --- !u!4 &944394756
 Transform:
   m_ObjectHideFlags: 0
@@ -3433,6 +3435,7 @@ GameObject:
   - component: {fileID: 1306964307}
   - component: {fileID: 1306964309}
   - component: {fileID: 1306964308}
+  - component: {fileID: 1306964310}
   m_Layer: 5
   m_Name: PlayerHealth
   m_TagString: Untagged
@@ -3499,6 +3502,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1306964306}
   m_CullTransparentMesh: 1
+--- !u!114 &1306964310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306964306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32e9264a12f5b8b478beffa0e0af9f7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifePlayerText: {fileID: 2017793921}
+  lifeEnemyText: {fileID: 284393385}
 --- !u!1001 &1322702482
 PrefabInstance:
   m_ObjectHideFlags: 0

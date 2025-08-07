@@ -54,7 +54,7 @@ public class CardStore
 			if (item.cardType == CardType.Biology)
 			{
 				BiologyCard biologyCard = item as BiologyCard;
-				Debug.Log($"卡片名稱: {item.cardName}, ID: {item.id}, 費用: {item.cardCost}, 稀有度: {item.cardRare}, 描述: {item.cardDescription},ATK: {biologyCard.attack}, DEF: {biologyCard.health}, 屬性: {biologyCard.cardFeature}");
+				Debug.Log($"卡片名稱: {item.cardName}, ID: {item.id}, 費用: {item.cardCost}, 稀有度: {item.cardRare}, 描述: {item.cardDescription},ATK: {biologyCard.attack}, DEF: {biologyCard.healthMax}, 屬性: {biologyCard.cardFeature}");
 			}
 			else
 			{
@@ -184,7 +184,7 @@ public class CardStore
 		{
 			case CardType.Biology:
 				var biologyCard = (BiologyCard)copyCard;
-				copyCard = new BiologyCard(biologyCard.id, biologyCard.cardName, biologyCard.cardCost, biologyCard.cardRare, biologyCard.cardDescription, biologyCard.attack, biologyCard.health, biologyCard.cardFeature);
+				copyCard = new BiologyCard(biologyCard.id, biologyCard.cardName, biologyCard.cardCost, biologyCard.cardRare, biologyCard.cardDescription, biologyCard.attack, biologyCard.healthMax, biologyCard.cardFeature);
 				copyCard.cardBG = cardData.cardBG; // 複製卡牌背景圖
 				copyCard.cardIcon = cardData.cardIcon; // 複製卡牌圖示
 				break;

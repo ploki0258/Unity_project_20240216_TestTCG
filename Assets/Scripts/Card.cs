@@ -64,7 +64,19 @@ public abstract class Card
 public class BiologyCard : Card
 {
 	#region 欄位
-	[Header("攻擊力")] public int attack;
+	[Header("攻擊力"), Tooltip("原始攻擊力")] public int attackMax;
+	[Tooltip("攻擊力")]
+	public int attack
+	{
+		get => _attack;
+		set
+		{
+			_attack = Mathf.Clamp(value, 0, attackMax);
+			renewAttackChange?.Invoke();
+		}
+	}
+	int _attack;
+	public Action renewAttackChange;
 	[Header("生命值"), Tooltip("原始生命值")] public int healthMax;
 	[Tooltip("當前生命值")]
 	public int currentHealth
@@ -73,11 +85,13 @@ public class BiologyCard : Card
 		set
 		{
 			// 確保當前生命值不會超過最大生命值
-			currentHealth = Mathf.Clamp(value, 0, healthMax);
+			_currentHealth = Mathf.Clamp(value, 0, healthMax);
+			renewHealthChange?.Invoke();
 		}
 	}
 	int _currentHealth = 0;
 	//public int atkCount;
+	public Action renewHealthChange;
 	[Header("卡片屬性")] public string[] cardFeature;
 	#endregion
 
@@ -85,7 +99,8 @@ public class BiologyCard : Card
 	public BiologyCard(int _id, string _name, int _cost, CardRare _rare, string _des, int _atk, int _hea, string[] _feature) : base(_id, _name, _cost, _rare, _des)
 	{
 		this.cardType = CardType.Biology;
-		this.attack = _atk;
+		this.attackMax = _atk;
+		this.attack = attackMax;
 		this.healthMax = _hea;
 		this.currentHealth = this.healthMax;
 		this.cardFeature = _feature;

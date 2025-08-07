@@ -546,6 +546,9 @@ GameObject:
   - component: {fileID: 3443394205123393501}
   - component: {fileID: 2862283667514426216}
   - component: {fileID: 74414204884045371}
+  - component: {fileID: -1142035729833825665}
+  - component: {fileID: 2451531205413168094}
+  - component: {fileID: 7022321708553199172}
   m_Layer: 5
   m_Name: Card Fight
   m_TagString: Untagged
@@ -586,8 +589,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a313aa649ae40dd4e84197d31eb774d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  biologyCards:
-  - id: 0
+  biologyCard:
+    id: 0
     cardName: 
     cardType: 0
     cardRare: 0
@@ -595,11 +598,11 @@ MonoBehaviour:
     cardIcon: {fileID: 0}
     cardBG: {fileID: 0}
     cardDescription: 
-    attack: 0
-    health: 0
+    attackMax: 0
+    healthMax: 0
     cardFeature: []
-  spellCards:
-  - id: 0
+  spellCard:
+    id: 0
     cardName: 
     cardType: 0
     cardRare: 0
@@ -607,8 +610,8 @@ MonoBehaviour:
     cardIcon: {fileID: 0}
     cardBG: {fileID: 0}
     cardDescription: 
-  equipmentCards:
-  - id: 0
+  equipmentCard:
+    id: 0
     cardName: 
     cardType: 0
     cardRare: 0
@@ -653,6 +656,46 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardState: 0
   playerId: 0
+--- !u!114 &-1142035729833825665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5059166999305593781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5647131c2d03dda4a9c7ecdc90a8af78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackable: 0
+  attacker: 1
+--- !u!114 &2451531205413168094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5059166999305593781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43e7a2f6104f5884bbc2066ffa51a2c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  atkText: {fileID: 2173710011761804091}
+--- !u!114 &7022321708553199172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5059166999305593781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40156dd784c2380429381c7729144eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpText: {fileID: 3528752055546430438}
 --- !u!1 &5139756143168255076
 GameObject:
   m_ObjectHideFlags: 0

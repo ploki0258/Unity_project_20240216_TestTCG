@@ -12,8 +12,8 @@ public class AttackTarget : MonoBehaviour, IPointerClickHandler, IAttackable
 	private void Start()
 	{
 		cardDisplay = GetComponent<CardDisplay>();
-		isPlayer = cardDisplay == null;
-		attacker = isPlayer ? AttackerType.player : AttackerType.biology;
+		isPlayer = cardDisplay is null; // 沒有找到 cardDisplay
+		attacker = isPlayer ? AttackerType.players : AttackerType.biology;
 	}
 
 	public void OnPointerClick(PointerEventData eventData)
@@ -22,7 +22,7 @@ public class AttackTarget : MonoBehaviour, IPointerClickHandler, IAttackable
 		{
 			switch (attacker)
 			{
-				case AttackerType.player:
+				case AttackerType.players:
 					BattleManager.instance.AttackConfirm(this.gameObject);
 					break;
 				case AttackerType.biology:
@@ -41,11 +41,22 @@ public class AttackTarget : MonoBehaviour, IPointerClickHandler, IAttackable
 			Dead();
 	}
 
+	// 實現私人的interface方法
+	/*void IAttackable.TakeDamage(int damage)
+	{
+		BiologyCard biology = (BiologyCard)GetComponent<CardDisplay>().card;
+		biology.currentHealth -= damage;
+
+		if (biology.currentHealth <= 0)
+			Dead();
+	}*/
+
 	/// <summary>
 	/// 死亡
 	/// </summary>
 	void Dead()
 	{
+		// 可添加其他死亡邏輯、效果等
 		Destroy(this.gameObject);
 	}
 }
@@ -55,8 +66,8 @@ public class AttackTarget : MonoBehaviour, IPointerClickHandler, IAttackable
 /// </summary>
 public enum AttackerType
 {
-	player,     // 玩家
-	biology,    // 生物
+	players,	// 雙方玩家
+	biology,	// 生物
 }
 
 /// <summary>

@@ -25,7 +25,7 @@ public class BattleManager : MonoBehaviour
 	[SerializeField, Header("能量上限"), Range(0, 20)] int maxEnergy = 10;  // 最大能量
 	[SerializeField, Header("最大召喚次數")] int[] summonCountMax = new int[2] { 2, 2 };
 	[SerializeField, Header("攻擊箭頭物件")] GameObject attackingArrow = null;
-	[SerializeField, Header("生命值物件")] GameObject playerHealth, enemyHealth = null;
+	[SerializeField, Header("生命值")] int playerLife = 100, enemyLife = 100;
 
 	public List<Card> playerDeckList = new List<Card>(); // 玩家牌組列表
 	public List<Card> enemyDeckList = new List<Card>(); // 敵人牌組列表
@@ -53,6 +53,7 @@ public class BattleManager : MonoBehaviour
 	{
 		PlayerDataManager.instance.LoadEnemyData(); // 載入對手資料
 		GameInit();
+		SetLifePoint();
 	}
 
 	// 遊戲流程
@@ -85,7 +86,6 @@ public class BattleManager : MonoBehaviour
 	void SetEnergyFull()
 	{
 		energy = maxInitEnergy; // 設置能量為現有最大值
-		Debug.Log($"能量：{energy}");
 	}
 
 	/// <summary>
@@ -99,7 +99,6 @@ public class BattleManager : MonoBehaviour
 		if (maxInitEnergy >= energyUpperLimit)
 			return;
 		maxInitEnergy += value; // 增加能量最大值
-		Debug.Log($"能量上限：{maxInitEnergy}");
 	}
 
 	/// <summary>
@@ -111,6 +110,18 @@ public class BattleManager : MonoBehaviour
 		{
 			summonCount[i] = summonCountMax[i];
 		}
+	}
+
+	/// <summary>
+	/// 設置雙方玩家的生命值
+	/// </summary>
+	void SetLifePoint()
+	{
+		PlayerDatas player = PlayerDataManager.instance.playerDatas;
+		EnemyDatas enemy = PlayerDataManager.instance.enemyDatas;
+
+		player.playerLifePoint = playerLife;
+		enemy.enemyLifePoint = enemyLife;
 	}
 
 	/// <summary>
@@ -366,6 +377,7 @@ public class BattleManager : MonoBehaviour
 
 	void NextPhase()
 	{
+		// 當前階段的編號 == 取得枚舉的長度 - 1
 		if ((int)currentPhase == System.Enum.GetNames(currentPhase.GetType()).Length - 1)
 		{
 			currentPhase = PhaseType.playerDraw;
@@ -382,8 +394,8 @@ public class BattleManager : MonoBehaviour
 	/// 召喚請求
 	/// </summary>
 	/// <param name="playerType">玩家類型</param>
-	/// <param name="card">要召喚的卡牌物件</param>
-	public void SummonRequest(PlayerType playerType, GameObject card)
+	/// <param name="summonCard">要召喚的卡牌物件</param>
+	public void SummonRequest(PlayerType playerType, GameObject summonCard)
 	{
 		if (isCanSummon == false)
 			return;
@@ -422,11 +434,15 @@ public class BattleManager : MonoBehaviour
 		// 若場上的格子為空
 		if (isEmptyBlock)
 		{
-			waitingCard = card;
+			waitingCard = summonCard;
 			waitingPlayer = playerType;
 		}
 	}
 
+	/// <summary>
+	/// 召喚確認
+	/// </summary>
+	/// <param name="block">召喚區域</param>
 	public void SummonConfirm(Transform block)
 	{
 		Summon(waitingPlayer, waitingCard, block);
@@ -451,18 +467,30 @@ public class BattleManager : MonoBehaviour
 		}
 	}
 
-	private void Summon(PlayerType playerType, GameObject card, Transform block)
+	/// <summary>
+	/// 召喚
+	/// </summary>
+	/// <param name="playerType">召喚的玩家類型</param>
+	/// <param name="summonCard">要召喚的卡牌物件</param>
+	/// <param name="block">召喚區域</param>
+	private void Summon(PlayerType playerType, GameObject summonCard, Transform block)
 	{
-		card.transform.SetParent(block);
-		card.transform.localPosition = Vector3.zero;
-		card.transform.GetComponent<BattleCard>().cardState = CardState.inArea;
-		card.transform.GetComponent<BattleCard>().SetAttackCount(1);
-		block.GetComponent<Block>().card = card;
+		summonCard.transform.SetParent(block);
+		summonCard.transform.localPosition = Vector3.zero;
+		summonCard.transform.GetComponent<BattleCard>().cardState = CardState.inArea;
+		summonCard.transform.GetComponent<BattleCard>().SetAttackCount(1);
+		block.GetComponent<Block>().card = summonCard;
 		summonCount[(int)playerType]--;
 	}
 	#endregion
 
-	public void AttackRequest(PlayerType playerType, GameObject card)
+	#region 攻擊
+	/// <summary>
+	/// 攻擊請求
+	/// </summary>
+	/// <param name="playerType">玩家類型</param>
+	/// <param name="atkCard">要攻擊的卡牌物件</param>
+	public void AttackRequest(PlayerType playerType, GameObject atkCard)
 	{
 		bool isCardBlock = false;
 		GameObject[] blocks = null;
@@ -492,13 +520,17 @@ public class BattleManager : MonoBehaviour
 
 		if (isCardBlock)
 		{
-			attackingCard = card;
+			attackingCard = atkCard;
 			attackingPlayer = playerType;
 			// 產生箭頭
-			CreateArrow(card.transform, attackingArrow);
+			CreateArrow(atkCard.transform, attackingArrow);
 		}
 	}
 
+	/// <summary>
+	/// 攻擊確認
+	/// </summary>
+	/// <param name="target">攻擊目標</param>
 	public void AttackConfirm(GameObject target)
 	{
 		Attack(attackingCard, target);
@@ -523,29 +555,47 @@ public class BattleManager : MonoBehaviour
 		}
 	}
 
+	/// <summary>
+	/// 攻擊
+	/// </summary>
+	/// <param name="attacker">攻擊者</param>
+	/// <param name="enemyTarget">攻擊的敵人目標</param>
 	void Attack(GameObject attacker, GameObject enemyTarget)
 	{
 		AttackTarget attackPlayer = attacker.GetComponent<AttackTarget>();
-		AttackTarget attackEnemy = enemyTarget.GetComponent<AttackTarget>();
+		AttackTarget attackEnemy = enemyTarget?.GetComponent<AttackTarget>();
+
+		Card attackerCard = attacker.GetComponent<CardDisplay>().card;
+		BiologyCard biologyPlayer = attackerCard as BiologyCard;
+
+		Card enemyCard = enemyTarget?.GetComponent<CardDisplay>().card;
+		BiologyCard biologyEnemy = enemyCard as BiologyCard;
 
 		if (attackEnemy.attacker == AttackerType.biology)
 		{
-			Card attackerCard = attacker.GetComponent<CardDisplay>().card;
-			BiologyCard biologyPlayer = attackerCard as BiologyCard;
-
-			Card enemyCard = enemyTarget.GetComponent<CardDisplay>().card;
-			BiologyCard biologyEnemy = enemyCard as BiologyCard;
-
+			// 攻擊對手的生物卡
 			attackEnemy.TakeDamage(biologyPlayer.attack);
 			attackPlayer.TakeDamage(biologyEnemy.attack);
-
-			attacker.GetComponent<BattleCard>().CostAttackCount(1);
 		}
-		else if (attackEnemy.attacker == AttackerType.player)
+		else if (attackEnemy.attacker == AttackerType.players)
 		{
-			// 攻擊對手的生命值
+			if (attackingPlayer == PlayerType.player)
+			{
+				// 玩家攻擊對手的生命值
+				int enemyLp = PlayerDataManager.instance.enemyDatas.enemyLifePoint;
+				enemyLp -= biologyPlayer.attack;
+			}
+			else
+			{
+				// 對手攻擊玩家的生命值
+				int playerLp = PlayerDataManager.instance.playerDatas.playerLifePoint;
+				playerLp -= biologyEnemy.attack;
+			}
 		}
+		// 減少攻擊次數
+		attacker.GetComponent<BattleCard>().CostAttackCount(1);
 	}
+	#endregion
 
 	void CreateArrow(Transform startPoint, GameObject arrowObj)
 	{
