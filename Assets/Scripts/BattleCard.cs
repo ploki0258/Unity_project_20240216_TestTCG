@@ -16,14 +16,14 @@ public class BattleCard : MonoBehaviour, IPointerDownHandler
 			if (cardState == CardState.inHand)
 			{
 				// 將 int 轉為 Enum
-				BattleManager.instance.SummonRequest((PlayerType)playerId, this.gameObject);
+				BattleManager.instance.SummonRequest((PlayerType)playerId, this.gameObject, transform.position);
 			}
 			// 在場上
 			else if (cardState == CardState.inArea)
 			{
 				if (attackCount > 0)
 				{
-					BattleManager.instance.AttackRequest((PlayerType)playerId, this.gameObject);
+					BattleManager.instance.AttackRequest((PlayerType)playerId, this.gameObject, transform.position);
 				}
 			}
 		}

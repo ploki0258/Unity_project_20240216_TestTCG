@@ -2308,10 +2308,11 @@ MonoBehaviour:
   maxHandCount: 6
   maxEnergy: 10
   summonCountMax: 0200000002000000
-  attackingArrow: {fileID: 8966582062543632406, guid: 6d89c8fe430248248899e65f27b124e2,
+  attackingArrow: {fileID: 8966582062543632406, guid: b9960c72e1da8e740bb112e593c81e05,
     type: 3}
   playerLife: 100
   enemyLife: 100
+  canvas: {fileID: 848005252}
 --- !u!4 &944394756
 Transform:
   m_ObjectHideFlags: 0

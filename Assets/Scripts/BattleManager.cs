@@ -26,6 +26,7 @@ public class BattleManager : MonoBehaviour
 	[SerializeField, Header("最大召喚次數")] int[] summonCountMax = new int[2] { 2, 2 };
 	[SerializeField, Header("攻擊箭頭物件")] GameObject attackingArrow = null;
 	[SerializeField, Header("生命值")] int playerLife = 100, enemyLife = 100;
+	[SerializeField] Transform canvas;
 
 	public List<Card> playerDeckList = new List<Card>(); // 玩家牌組列表
 	public List<Card> enemyDeckList = new List<Card>(); // 敵人牌組列表
@@ -395,7 +396,7 @@ public class BattleManager : MonoBehaviour
 	/// </summary>
 	/// <param name="playerType">玩家類型</param>
 	/// <param name="summonCard">要召喚的卡牌物件</param>
-	public void SummonRequest(PlayerType playerType, GameObject summonCard)
+	public void SummonRequest(PlayerType playerType, GameObject summonCard, Vector2 start)
 	{
 		if (isCanSummon == false)
 			return;
@@ -490,7 +491,7 @@ public class BattleManager : MonoBehaviour
 	/// </summary>
 	/// <param name="playerType">玩家類型</param>
 	/// <param name="atkCard">要攻擊的卡牌物件</param>
-	public void AttackRequest(PlayerType playerType, GameObject atkCard)
+	public void AttackRequest(PlayerType playerType, GameObject atkCard, Vector2 start)
 	{
 		bool isCardBlock = false;
 		GameObject[] blocks = null;
@@ -523,7 +524,7 @@ public class BattleManager : MonoBehaviour
 			attackingCard = atkCard;
 			attackingPlayer = playerType;
 			// 產生箭頭
-			CreateArrow(atkCard.transform, attackingArrow);
+			CreateArrow(canvas, attackingArrow, start);
 		}
 	}
 
@@ -550,8 +551,8 @@ public class BattleManager : MonoBehaviour
 		foreach (GameObject blockItem in blocks)
 		{
 			Block block = blockItem.GetComponent<Block>();
-			if (block != null)
-				block.GetComponent<AttackTarget>().attackable = false;
+			if (block.card != null)
+				block.card.GetComponent<AttackTarget>().attackable = false;
 		}
 	}
 
@@ -565,11 +566,11 @@ public class BattleManager : MonoBehaviour
 		AttackTarget attackPlayer = attacker.GetComponent<AttackTarget>();
 		AttackTarget attackEnemy = enemyTarget?.GetComponent<AttackTarget>();
 
-		Card attackerCard = attacker.GetComponent<CardDisplay>().card;
-		BiologyCard biologyPlayer = attackerCard as BiologyCard;
+		CardDisplay attackerCard = attacker.GetComponent<CardDisplay>();
+		BiologyCard biologyPlayer = attackerCard.card as BiologyCard;
 
-		Card enemyCard = enemyTarget?.GetComponent<CardDisplay>().card;
-		BiologyCard biologyEnemy = enemyCard as BiologyCard;
+		CardDisplay enemyCard = enemyTarget?.GetComponent<CardDisplay>();
+		BiologyCard biologyEnemy = enemyCard.card as BiologyCard;
 
 		if (attackEnemy.attacker == AttackerType.biology)
 		{
@@ -594,14 +595,16 @@ public class BattleManager : MonoBehaviour
 		}
 		// 減少攻擊次數
 		attacker.GetComponent<BattleCard>().CostAttackCount(1);
+		attackerCard.ShowCard();
+		enemyCard.ShowCard();
 	}
 	#endregion
 
-	void CreateArrow(Transform startPoint, GameObject arrowObj)
+	void CreateArrow(Transform startPoint, GameObject arrowObj, Vector2 start)
 	{
 		DestroyArrow();
 		GameObject tempArrow = Instantiate(arrowObj, startPoint);
-		tempArrow.GetComponent<Arrow>().SetStartPoint(new Vector2(startPoint.position.x, startPoint.position.y));
+		tempArrow.GetComponent<Arrow>().SetStartPoint(start);
 		arrow = tempArrow;
 	}
 

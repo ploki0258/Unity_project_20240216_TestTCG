@@ -20,11 +20,14 @@ public class CardDisplay : MonoBehaviour
 	[SerializeField, Header("攻擊力")] TextMeshProUGUI atkText;
 	[SerializeField, Header("血量")] TextMeshProUGUI hpText;
 	[SerializeField, Header("圖示")] Image iconImage;
-	[SerializeField, Header("卡背")] Image bgImage;
+	[SerializeField, Header("卡牌底圖")] Image bgImage;
+	[SerializeField, Header("卡背")] Image cardBackground;
 	[SerializeField, Header("攻擊圖示")] Image atkImage;
 	[SerializeField, Header("血量圖示")] Image hpImage;
 
 	[Tooltip("卡牌")] public Card card;
+
+	bool isShowBg = false;
 	#endregion
 
 	private void Start()
@@ -34,19 +37,17 @@ public class CardDisplay : MonoBehaviour
 			ShowCard();
 		}
 
-		UpdateBiologyCardAttackText();
-		UpdateBiologyCardLifeText();
-		biologyCard = card as BiologyCard;
-		//Debug.Log(biologyCard.cardName);
-		//biologyCard.renewAttackChange += UpdateBiologyCardAttackText;
-		//biologyCard.renewHealthChange += UpdateBiologyCardLifeText;
+		//UpdateBiologyCardAttackText();
+		//UpdateBiologyCardLifeText();
+		if (isShowBg)
+			ShowCardBg();
+		else
+			ShowCard();
 	}
 
 	private void OnDisable()
 	{
 		biologyCard = card as BiologyCard;
-		//biologyCard.renewAttackChange -= UpdateBiologyCardAttackText;
-		//biologyCard.renewHealthChange -= UpdateBiologyCardLifeText;
 	}
 
 	public void ShowCard()
@@ -70,7 +71,7 @@ public class CardDisplay : MonoBehaviour
 			case CardType.Biology:
 				BiologyCard biology = card as BiologyCard;
 				atkText.text = biology.attack.ToString();
-				hpText.text = biology.healthMax.ToString();
+				hpText.text = biology.currentHealth.ToString();
 				featureText.text = string.Join("、", biology.cardFeature);
 				break;
 			case CardType.Spell:
@@ -102,7 +103,7 @@ public class CardDisplay : MonoBehaviour
 			case CardType.Biology:
 				BiologyCard biology = this.card as BiologyCard;
 				atkText.text = biology.attack.ToString();
-				hpText.text = biology.healthMax.ToString();
+				hpText.text = biology.currentHealth.ToString();
 				featureText.text = string.Join("、", biology.cardFeature); // 將卡片屬性陣列轉為字串
 				break;
 			case CardType.Spell:
@@ -121,6 +122,8 @@ public class CardDisplay : MonoBehaviour
 				break;
 		}
 	}
+
+	void ShowCardBg() => cardBackground.gameObject.SetActive(isShowBg ? true : false);
 
 	void UpdateBiologyCardLifeText() => hpText.text = $"{biologyCard.currentHealth}";
 
