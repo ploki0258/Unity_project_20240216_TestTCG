@@ -40,10 +40,10 @@ public class BattleManager : MonoBehaviour
 
 	GameObject attackingCard = null;
 	GameObject arrow;
-	#endregion
 
 	SimpleDeckShufflet simpleDeck = new SimpleDeckShufflet(); // 使用簡單的隨機洗牌算法
 	FisherYatesDeckShufflet yatesDeckShufflet = new FisherYatesDeckShufflet(); // 使用Fisher-Yates洗牌算法
+	#endregion
 
 	private void Awake()
 	{
@@ -343,19 +343,23 @@ public class BattleManager : MonoBehaviour
 		// 在結束階段時 檢查手牌數量是否超過上限
 		if (isHandMax) // 如果啟用手牌上限
 		{
-			List<Card> hand = new List<Card>();
+			List<GameObject> hands = new List<GameObject>();
+
+
 			switch (currentPhase)
 			{
 				case PhaseType.playerEnd:
-					hand = playerHand.GetComponentsInChildren<CardDisplay>().Select(cd => cd.card).ToList(); // 獲取玩家手牌
+					hands = playerHand.GetComponentsInChildren<GameObject>().Select(cd => cd).ToList(); // 獲取玩家手牌
 					break;
 				case PhaseType.enemyEnd:
-					hand = enemyHand.GetComponentsInChildren<CardDisplay>().Select(cd => cd.card).ToList(); // 獲取對手手牌
+					hands = enemyHand.GetComponentsInChildren<GameObject>().Select(cd => cd).ToList(); // 獲取對手手牌
 					break;
 			}
-			if (hand.Count > maxHandCount) // 如果手牌數量超過上限
+
+			// 如果手牌數量超過上限
+			if (hands.Count > maxHandCount)
 			{
-				int excessCount = hand.Count - maxHandCount; // 計算超出上限的張數
+				int excessCount = hands.Count - maxHandCount; // 計算超出上限的張數
 				Debug.Log($"手牌數量超過上限，需捨棄 {excessCount} 張手牌");
 				// 選擇要丟棄的手牌
 				// 等待玩家選擇要丟棄的手牌
@@ -365,6 +369,8 @@ public class BattleManager : MonoBehaviour
 					// 這裡可以添加UI提示讓玩家選擇要丟棄的手牌
 					// 假設玩家選擇了要丟棄的手牌，並且已經處理了丟棄邏輯
 					// 例如：hand.Remove(selectedCard);
+					// 假設玩家選擇的卡牌
+					Card card = playerHand.GetComponent<ClickCard>().card; // 獲取玩家選擇的卡牌
 					excessCount--; // 模擬丟棄一張手牌
 					yield return new WaitForSeconds(0.1f);
 				}
@@ -374,6 +380,12 @@ public class BattleManager : MonoBehaviour
 				Debug.Log("手牌數量未超過上限，無需捨棄");
 			}
 		}
+	}
+
+	public Card SelectCard(int id)
+	{
+		Card card = CardStore.instance.GetCardById(id); // 根據ID選擇卡牌
+		return card;
 	}
 
 	void NextPhase()
@@ -600,14 +612,23 @@ public class BattleManager : MonoBehaviour
 	}
 	#endregion
 
-	void CreateArrow(Transform startPoint, GameObject arrowObj, Vector2 start)
+	/// <summary>
+	/// 創建指示箭頭
+	/// </summary>
+	/// <param name="spawnPoint">生成位置</param>
+	/// <param name="arrowObj">箭頭物件</param>
+	/// <param name="start">起始位置</param>
+	void CreateArrow(Transform spawnPoint, GameObject arrowObj, Vector2 start)
 	{
 		DestroyArrow();
-		GameObject tempArrow = Instantiate(arrowObj, startPoint);
+		GameObject tempArrow = Instantiate(arrowObj, spawnPoint);
 		tempArrow.GetComponent<Arrow>().SetStartPoint(start);
 		arrow = tempArrow;
 	}
 
+	/// <summary>
+	/// 刪除箭頭物件
+	/// </summary>
 	void DestroyArrow() => Destroy(arrow);
 
 	// 當前階段

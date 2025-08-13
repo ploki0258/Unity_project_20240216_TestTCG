@@ -3,7 +3,8 @@ using UnityEngine.EventSystems;
 
 public class ClickCard : MonoBehaviour, IPointerDownHandler
 {
-	[SerializeField] public CardState state = CardState.inLibrary; // 卡牌狀態
+	public CardState state = CardState.inLibrary; // 卡牌狀態
+	public Card card;
 	
 	Deck deck;
 
@@ -14,7 +15,7 @@ public class ClickCard : MonoBehaviour, IPointerDownHandler
 
 	private void Start()
 	{
-		//Debug.Log($"{GetComponent<CardDisplay>().card.cardName} ID:{GetComponent<CardDisplay>().card.id}:卡牌狀態設置為 {state}");
+
 	}
 
 	// 當玩家點擊卡牌時觸發
@@ -22,6 +23,7 @@ public class ClickCard : MonoBehaviour, IPointerDownHandler
 	{
 		int id = GetComponent<CardDisplay>().card.id; // 獲取卡牌ID
 		deck.UpdateCard(state, id);
+		card = BattleManager.instance.SelectCard(id); // 通知戰鬥管理器選擇卡牌
 	}
 
 	/// <summary>

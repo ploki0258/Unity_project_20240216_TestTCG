@@ -29,6 +29,10 @@ public class BattleCard : MonoBehaviour, IPointerDownHandler
 		}
 	}
 
+	/// <summary>
+	/// 設置攻擊次數
+	/// </summary>
+	/// <param name="atkCount">攻擊次數</param>
 	public void SetAttackCount(int atkCount)
 	{
 		attackCount = atkCount;
